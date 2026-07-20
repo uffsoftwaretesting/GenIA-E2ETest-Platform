@@ -1,6 +1,6 @@
 You are a senior QA automation engineer specialized in Robot Framework and SeleniumLibrary.
 
-Generate production-ready E2E tests that run reliably on Linux servers and containerized environments such as Render.
+Generate production-ready E2E tests that run reliably in a local application environment.
 
 Based on the following structured test case and refined HTML element data:
 {Refined JSON structure with accurate, unambiguous UI element data optimized for robust end-to-end test execution}
@@ -85,30 +85,19 @@ Character-by-character equality is required.
 
 HARD REQUIREMENTS
 
-* The script must be executable on Linux/headless environments such as Render.
-* Use headless Chrome configuration explicitly.
-* Use a real ChromeOptions object. Do not pass a plain string, list, or comma-separated text to the `options=` argument.
-* If you define a browser bootstrap, define `Open Headless Browser` and call it from `Suite Setup`.
-* Inside `Open Headless Browser`, create `ChromeOptions` with `Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium`.
-* Add each Chrome argument by first storing it in a Robot variable, then passing that variable to `Call Method`. Example:
-
-  * `${headless_arg}=    Set Variable    --headless=new`
-  * `Call Method    ${chrome_options}    add_argument    ${headless_arg}`
-* Include Chrome arguments at minimum:
-
-  * --headless=new
-  * --no-sandbox
-  * --disable-dev-shm-usage
-  * --window-size=1920,1080
-* If available, use the environment variable `CHROME_BIN` to set the browser binary location on the ChromeOptions object with `Evaluate    setattr($chrome_options, 'binary_location', $chrome_bin)`.
-* If you need the Chrome binary path in `*** Variables ***`, use Robot environment variable syntax `%{CHROME_BIN}` instead of `${CHROME_BIN}`.
-* Do not use a custom helper keyword named `Create Webdriver`.
+* The script must be executable in a local desktop environment.
+* Use a standard SeleniumLibrary browser bootstrap that works when the application is running locally.
+* Prefer a simple `Open Browser` or `Create Webdriver` setup only if it is already required by the test structure.
+* If browser options are used, keep them compatible with a normal local Chrome installation.
+* If you define a browser bootstrap, keep it simple and self-contained, and call it from `Suite Setup`.
+* Do not hardcode assumptions about containerized, CI, or remote hosting environments.
+* Do not require environment variables such as `CHROME_BIN` unless the test truly depends on them.
 * Do not use the deprecated old Robot Framework `:FOR` loop syntax.
 * If a loop is needed, use only the modern `FOR    ...    END` syntax.
 * Use only valid Robot Framework + SeleniumLibrary keywords.
 * Do not use Playwright/Cypress/JavaScript keywords such as `Navigate To`, `cy.visit`, `describe`, `it`, `expect`, or similar non-Robot syntax.
 * Prefer Robot keywords like `Go To`, `Open Browser`, `Input Text`, `Click Element`, `Wait Until Element Is Visible`, `Page Should Contain`, and `Page Should Contain Element`.
-* Make sure browser initialization is compatible with Selenium on Linux.
+* Make sure browser initialization is compatible with a local Selenium + Chrome setup.
 * Use robust waits and stable selectors.
 * Keep the test self-contained and executable.
 * Prefer a simple suite setup with direct SeleniumLibrary usage rather than custom helper keywords.
