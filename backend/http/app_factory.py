@@ -6,6 +6,8 @@ import asyncio
 import json
 import logging
 import tempfile
+import sys
+import os
 from queue import Empty
 import traceback
 import uuid
@@ -38,9 +40,41 @@ logger = logging.getLogger("genia.api")
 settings = get_settings()
 
 
+def _write_console(message: str, *, stream: str = "stdout") -> None:
+    text = f"{message}\n"
+    try:
+        target = sys.stdout if stream == "stdout" else sys.stderr
+        target.write(text)
+        target.flush()
+    except Exception:
+        try:
+            os.write(1 if stream == "stdout" else 2, text.encode("utf-8", errors="replace"))
+        except Exception:
+            pass
+
+
+def _configure_logging() -> None:
+    root_logger = logging.getLogger()
+    if not root_logger.handlers:
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(logging.Formatter("%(message)s"))
+        root_logger.addHandler(handler)
+    root_logger.setLevel(logging.INFO)
+
+    logger.setLevel(logging.INFO)
+    logger.propagate = True
+
+    flask_logger = logging.getLogger("flask.app")
+    flask_logger.setLevel(logging.INFO)
+    flask_logger.propagate = True
+
+    werkzeug_logger = logging.getLogger("werkzeug")
+    werkzeug_logger.setLevel(logging.INFO)
+    werkzeug_logger.propagate = True
+
+
 def trace(message: str) -> None:
-    print(f"[GenIA Backend] {message}", flush=True)
-    logger.info(message)
+    _write_console(f"[GenIA Backend] {message}", stream="stdout")
 
 
 def model_to_dict(value: Any) -> Any:
@@ -132,6 +166,8 @@ def create_app() -> tuple[Flask, SocketIO, GenIAOrchestrator]:
             "Flask dependencies are not installed in this environment. "
             "Install the backend requirements to start the API."
         )
+
+    _configure_logging()
 
     app = Flask(__name__)
     app.config["MAX_CONTENT_LENGTH"] = settings.max_upload_size_mb * 1024 * 1024

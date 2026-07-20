@@ -11,10 +11,10 @@ logger = logging.getLogger(__name__)
 
 class LLMFactory:
     _providers = {
-        "openai": "llms.openai:OpenAIProvider",
-        "anthropic": "llms.anthropic:AnthropicProvider",
-        "gemini": "llms.gemini:GeminiProvider",
-        "cohere": "llms.cohere:CohereProvider",
+        "openai": "backend.llms.openai:OpenAIProvider",
+        "anthropic": "backend.llms.anthropic:AnthropicProvider",
+        "gemini": "backend.llms.gemini:GeminiProvider",
+        "cohere": "backend.llms.cohere:CohereProvider",
     }
 
     @classmethod

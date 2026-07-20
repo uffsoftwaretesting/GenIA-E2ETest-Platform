@@ -14,11 +14,37 @@ IMPORTANT RULES:
 - Use explicit waits when appropriate.
 - Use stable selectors whenever possible.
 
+LOCAL EXECUTION REQUIREMENTS:
+- Assume the application under test is running locally on the same machine.
+- Prefer a simple JUnit 5 class that can execute against a local desktop Chrome installation.
+- Do not hardcode assumptions about CI, containers, remote browsers, Selenium Grid, or headless execution.
+- Do not require environment variables such as `CHROME_BIN` unless the generated code truly depends on them.
+- Keep the test self-contained and straightforward so it can run locally with minimal setup.
+- The generated source will be compiled and executed as Java. Do not rely on any translation layer or non-Java runtime.
+- Use direct Selenium WebDriver calls and standard JUnit assertions.
+- Include a safe teardown path so the browser is closed even if the test fails.
+
 TECHNICAL REQUIREMENTS:
 - Use JUnit 5 syntax.
 - Use Selenium WebDriver.
 - Include setup and teardown methods.
 - Generate a complete class.
+- Prefer a single public class named `GeneratedTest` when possible so the compiled file stays simple.
+- Prefer a single test class with a clear `@Test` method and a simple `@BeforeEach` / `@AfterEach` lifecycle.
+- Prefer `ChromeDriver` with local browser defaults unless the test explicitly needs something else.
+- Use explicit waits for dynamic UI states instead of hard sleeps whenever possible.
+- Prefer this style for Java code:
+  - create `WebDriver driver` and `WebDriverWait wait` as local fields;
+  - use `new WebDriverWait(driver, Duration.ofSeconds(10))` instead of passing a raw integer;
+  - add `import java.time.Duration;` whenever explicit waits are used;
+  - assign the result of `wait.until(...)` to a `WebElement` variable;
+  - call actions like `click()` or `sendKeys()` on a separate line after assignment;
+  - keep assertions on separate lines using standard `Assertions.*` methods;
+  - prefer `Assertions.assertEquals(...)`, `Assertions.assertNotNull(...)`, or `Assertions.assertDoesNotThrow(...)` when they express the intent more clearly than `assertTrue(...)`;
+  - use `Assertions.assertTrue(...)` mainly for direct boolean checks such as `isDisplayed()`, `isEnabled()`, or `text.contains(...)` after explicitly assigning the string to a local variable;
+  - avoid asserting raw chained expressions inline when an intermediate variable would make the intent clearer;
+  - avoid chaining long expressions off `wait.until(...)` in a single statement;
+  - avoid custom helper classes, nested classes, or unnecessary abstractions.
 
 OUTPUT REQUIREMENTS:
 Return ONLY raw executable Java code.

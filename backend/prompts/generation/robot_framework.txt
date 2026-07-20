@@ -85,13 +85,15 @@ Character-by-character equality is required.
 
 HARD REQUIREMENTS
 
-* The script must be executable in a local desktop environment.
-* Use a standard SeleniumLibrary browser bootstrap that works when the application is running locally.
+* The script must be executable in a normal local desktop environment.
+* Assume the application under test is running locally and the browser is launched on the same machine.
+* Use a standard SeleniumLibrary browser bootstrap that works with a local Chrome installation.
 * Prefer a simple `Open Browser` or `Create Webdriver` setup only if it is already required by the test structure.
 * If browser options are used, keep them compatible with a normal local Chrome installation.
 * If you define a browser bootstrap, keep it simple and self-contained, and call it from `Suite Setup`.
-* Do not hardcode assumptions about containerized, CI, or remote hosting environments.
-* Do not require environment variables such as `CHROME_BIN` unless the test truly depends on them.
+* Do not hardcode assumptions about containerized, CI, cloud, hosted, remote, or headless environments.
+* Do not mention or depend on Render, Docker, Selenium Grid, remote browsers, or `CHROME_BIN` unless the test truly depends on them.
+* Use visible browser execution by default; do not force headless mode.
 * Do not use the deprecated old Robot Framework `:FOR` loop syntax.
 * If a loop is needed, use only the modern `FOR    ...    END` syntax.
 * Use only valid Robot Framework + SeleniumLibrary keywords.

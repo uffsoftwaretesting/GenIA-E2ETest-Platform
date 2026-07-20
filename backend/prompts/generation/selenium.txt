@@ -15,11 +15,30 @@ IMPORTANT RULES:
 - Use explicit waits whenever possible.
 - Keep compatibility with the selected language.
 
+LOCAL EXECUTION REQUIREMENTS:
+- Assume the application under test is running locally on the same machine.
+- Prefer browser automation that works with a normal local desktop Chrome installation.
+- Do not hardcode assumptions about containers, CI servers, remote browsers, Selenium Grid, or cloud execution.
+- Do not require environment variables such as `CHROME_BIN` unless the generated code truly depends on them.
+- Keep the code simple and canonical so it is easy to execute locally.
+- Prefer direct Selenium calls and standard assertions over custom utilities.
+- Use visible browser execution by default; do not force headless mode.
+
 TECHNICAL REQUIREMENTS:
 - Generate a complete test file or class.
 - Include imports.
 - Use the selected language consistently.
 - Prefer stable selectors and avoid brittle locators.
+- If the selected language is Python, keep the script compatible with pytest-style execution.
+- If the selected language is JavaScript or TypeScript, prefer a simple async/await structure.
+- If the selected language is Java, prefer a single class with clear setup and teardown.
+- Prefer this Selenium style:
+  - keep browser setup explicit and local;
+  - prefer simple variable assignments for wait results and element references;
+  - call actions on a separate line after locating the element;
+  - keep assertions direct and standard for the selected language;
+  - avoid deeply nested helper methods or abstractions that hide the execution flow;
+  - avoid long chained calls when a clear step-by-step sequence is possible.
 
 OUTPUT REQUIREMENTS:
 Return ONLY raw executable code.

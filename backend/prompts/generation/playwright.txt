@@ -13,11 +13,29 @@ IMPORTANT RULES:
 - Use robust selectors.
 - Use auto-waiting features whenever possible.
 
+LOCAL EXECUTION REQUIREMENTS:
+- Assume the application under test is running locally on the same machine.
+- Prefer a simple, standard Playwright test file that can run in a local desktop browser.
+- Do not hardcode assumptions about CI, containers, remote browsers, Selenium Grid, or cloud-hosted environments.
+- Do not force headless mode unless the test explicitly requires it.
+- Keep the code simple and canonical so it can run with a local Chrome installation.
+- Use direct locators and standard Playwright assertions instead of custom helpers whenever possible.
+- Avoid unnecessary fixtures, plugins, or project-specific test harness assumptions.
+
 TECHNICAL REQUIREMENTS:
 - Use Playwright Test framework.
 - Use JavaScript or TypeScript syntax consistently.
 - Include imports.
 - Generate a complete test file.
+- Prefer a single test file with one or more `test(...)` blocks and minimal setup.
+- When a browser context is needed, use the standard `page` fixture.
+- Prefer `await expect(...)` assertions over ad hoc custom verification helpers.
+- Prefer this Playwright style:
+  - keep the test file small and direct;
+  - use `test(...)` with the `page` fixture;
+  - prefer `page.locator(...)` and `await expect(locator).toBeVisible()` / `toHaveText()` / `toHaveValue()`;
+  - avoid custom fixtures, custom test runners, or reusable helpers unless absolutely necessary;
+  - avoid mixing many abstraction layers in the same file.
 
 OUTPUT REQUIREMENTS:
 Return ONLY raw executable code.

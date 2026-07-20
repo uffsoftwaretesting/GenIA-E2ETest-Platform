@@ -1817,11 +1817,14 @@ class GenIAOrchestrator:
                     ),
                 )
                 execution_artifacts = _compact_execution_artifacts(execution_result)
+                execution_payload = _model_dump(execution_result)
+                if not isinstance(execution_payload, dict):
+                    execution_payload = {"value": _truncate_text(str(execution_payload), 1500)}
                 self.push_event(
                     "STAGE_DONE",
                     "execution",
                     {
-                        **_model_dump(execution_result),
+                        **execution_payload,
                         "execution_artifacts": execution_artifacts,
                         "primary_screenshot": execution_artifacts.get("primary_screenshot"),
                     },

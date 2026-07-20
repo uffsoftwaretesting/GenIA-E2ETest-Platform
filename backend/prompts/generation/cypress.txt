@@ -14,11 +14,29 @@ IMPORTANT RULES:
 - Preserve execution order exactly as defined in the test case.
 - Avoid unnecessary code duplication.
 
+LOCAL EXECUTION REQUIREMENTS:
+- Assume the application under test is running locally on the same machine.
+- Prefer a standard Cypress spec that can execute in a local desktop browser.
+- Do not hardcode assumptions about CI, containers, remote browsers, cloud execution, or hosted test runners.
+- Do not force headless-only execution.
+- Keep the code simple and canonical so it remains easy to run locally.
+- Prefer direct Cypress commands and native assertions instead of custom abstractions.
+- Avoid custom fixtures or project-specific wrappers unless they are clearly necessary.
+
 TECHNICAL REQUIREMENTS:
 - Use JavaScript syntax.
 - Use describe(), it(), cy.get(), cy.xpath() when necessary.
 - Use assertions with should().
 - Keep compatibility with Cypress latest versions.
+- Prefer a single spec file with a straightforward `describe()` block.
+- Use `cy.visit()` for navigation and `cy.get()` / `cy.contains()` for interaction whenever possible.
+- Keep waits explicit and minimal.
+- Prefer this Cypress style:
+  - use simple `cy.visit()` / `cy.get()` / `cy.contains()` chains;
+  - keep assertions as separate `should(...)` statements when practical;
+  - avoid custom commands, fixtures, and project-specific wrappers;
+  - avoid long chained assertions when a short step-by-step flow is clearer;
+  - do not rely on plugin-only APIs unless the selector truly requires them.
 
 OUTPUT REQUIREMENTS:
 Return ONLY raw executable code.
