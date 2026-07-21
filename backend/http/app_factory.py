@@ -440,7 +440,6 @@ def create_app() -> tuple[Flask, SocketIO, GenIAOrchestrator]:
         orchestrator.execution_logs = []
         return jsonify({"status": "cleared"}), 200
 
-    # ✅ CORREÇÃO 4: Adicionar CORS headers mesmo em erros 404 e 500
     @app.errorhandler(404)
     def not_found(error):
         trace(f"404 Not Found: {request.method} {request.path}")

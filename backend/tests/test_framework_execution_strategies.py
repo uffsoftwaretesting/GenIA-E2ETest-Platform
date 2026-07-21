@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from backend.infrastructure.executor import TestExecutor
+from backend.infrastructure.TestExecutor import TestExecutor
 from backend.infrastructure.frameworks_languages import ExecutionStrategyRegistry
 
 

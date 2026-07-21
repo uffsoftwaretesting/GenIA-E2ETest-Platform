@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   const root = (window.GenIA = window.GenIA || {});
   const { byId, qsa, escapeHtml } = root.dom;
   const { INPUT_MODES, PIPELINE_STEPS, PROVIDER_MODELS, PROVIDER_SHORT, FRAMEWORK_LANGUAGES } = root.constants;
@@ -7,7 +7,6 @@
   const { extractUrlsFromText, normalizeText } = root.utils;
   const { createGenerationSession, startPhaseOne, continueAfterValidation } = root.generation;
   const { setCurrentSession, clearCurrentSession } = root.state;
-
   const RESULT_TABS = [
     { key: "logs", title: "Logs", contentId: "executionLogs" },
     { key: "restructure", title: "Estruturação", contentId: "structuredJsonContent" },
@@ -21,57 +20,52 @@
     { key: "finalization", title: "Finalização", contentId: "finalizationContent" },
     { key: "refactoring", title: "Refatoração", contentId: "refactoringContent" },
   ];
-
+  const promptStages = [
+    "structuring",
+    "extraction",
+    "refinement",
+    "generation",
+    "validation",
+    "confirmation",
+    "homologation",
+    "finalization",
+    "refactoring",
+  ];
+  const stageLabelMap = {
+    structuring: "Estruturação",
+    extraction: "Extração",
+    refinement: "Refinamento",
+    generation: "Geração",
+    validation: "Validação",
+    confirmation: "Confirmação",
+    homologation: "Homologação",
+    finalization: "Finalização",
+    refactoring: "Refatoração",
+  };
+  const stageToResultKey = {
+    structuring: "restructure",
+    extraction: "extraction",
+    refinement: "refinement",
+    generation: "generation",
+    validation: "validation",
+    confirmation: "confirmation",
+    execution: "execution",
+    homologation: "homologation",
+    finalization: "finalization",
+    refactoring: "refactoring",
+  };
+  const stageToStatusIcon = {
+    idle: "○",
+    running: "⟳",
+    done: "✓",
+    error: "✕",
+  };
   const setupTestGeneratorPage = (options = {}) => {
     const onGenerationComplete = options.onGenerationComplete;
     let currentSession = null;
     let promptBundle = {};
     let promptBundleFramework = "";
     let promptLoadToken = 0;
-
-    const promptStages = [
-      "structuring",
-      "extraction",
-      "refinement",
-      "generation",
-      "validation",
-      "confirmation",
-      "homologation",
-      "finalization",
-      "refactoring",
-    ];
-
-    const stageLabelMap = {
-      structuring: "Estruturação",
-      extraction: "Extração",
-      refinement: "Refinamento",
-      generation: "Geração",
-      validation: "Validação",
-      confirmation: "Confirmação",
-      homologation: "Homologação",
-      finalization: "Finalização",
-      refactoring: "Refatoração",
-    };
-
-    const stageToResultKey = {
-      structuring: "restructure",
-      extraction: "extraction",
-      refinement: "refinement",
-      generation: "generation",
-      validation: "validation",
-      confirmation: "confirmation",
-      execution: "execution",
-      homologation: "homologation",
-      finalization: "finalization",
-      refactoring: "refactoring",
-    };
-
-    const stageToStatusIcon = {
-      idle: "○",
-      running: "⟳",
-      done: "✓",
-      error: "✕",
-    };
 
     const loadPromptBundle = async (framework, inputMode = null) => {
       const currentToken = ++promptLoadToken;
@@ -161,11 +155,11 @@
     const renderStageOutput = (stageKey, payload) => {
       switch (stageKey) {
         case "restructure":
-          renderGraphView("structuredTreeContent", getGraphDataForStage(stageKey, payload), "Estruturação");
+          renderGraphView("structuredTreeContent", getGraphDataForStage(stageKey, payload), "EstruturaÃ§Ã£o");
           updateCode("structuredJsonContent", JSON.stringify(sanitizeModuleTreeForDisplay(payload?.structured || payload), null, 2));
           break;
         case "extraction":
-          renderGraphView("extractedTreeContent", getGraphDataForStage(stageKey, payload), "Extração");
+          renderGraphView("extractedTreeContent", getGraphDataForStage(stageKey, payload), "ExtraÃ§Ã£o");
           updateCode("extractedJsonContent", JSON.stringify(sanitizeModuleTreeForDisplay(payload?.extracted_snapshot || payload?.elements || payload), null, 2));
           break;
         case "refinement":
@@ -252,8 +246,8 @@
         const validation = payload;
         setStep(5, "ok");
         renderValidationCards(validation);
-        addLog("A etapa de validação terminou e a pipeline está pronta para continuar.", "success", "Validação");
-        showToast("Validação concluída. A pipeline pode continuar.", "success");
+        addLog("A etapa de validaÃ§Ã£o terminou e a pipeline estÃ¡ pronta para continuar.", "success", "ValidaÃ§Ã£o");
+        showToast("ValidaÃ§Ã£o concluÃ­da. A pipeline pode continuar.", "success");
       }
 
       if (type === "STAGE_START" && channel === "confirmation") {
@@ -266,8 +260,8 @@
 
       if (type === "STAGE_START" && channel === "execution") {
         setStep(7, "running");
-        addLog("A pipeline voltou a rodar após a validação.", "info", "Execução");
-        showToast("Pipeline retomada e em execução", "info");
+        addLog("A pipeline voltou a rodar apÃ³s a validaÃ§Ã£o.", "info", "ExecuÃ§Ã£o");
+        showToast("Pipeline retomada e em execuÃ§Ã£o", "info");
       }
 
       if (type === "STAGE_START" && channel === "homologation") {
@@ -304,7 +298,7 @@
     };
 
     const setStep = (step, status) => {
-      const icon = status === "running" ? "⏳" : status === "ok" ? "✓" : status === "error" ? "✗" : "⏳";
+      const icon = status === "running" ? "â³" : status === "ok" ? "âœ“" : status === "error" ? "âœ—" : "â³";
       const iconEl = byId(`pstep${step}-status`);
       if (iconEl) iconEl.textContent = icon;
     };
@@ -323,7 +317,7 @@
         await navigator.clipboard.writeText(text);
         showToast("Copiado", "success");
       } catch {
-        showToast("Não foi possível copiar", "error");
+        showToast("NÃ£o foi possÃ­vel copiar", "error");
       }
     };
 
@@ -331,7 +325,7 @@
       const el = byId(targetId);
       const script = el?.querySelector("code")?.textContent || el?.textContent || "";
       if (!script) {
-        showToast("Nenhum script disponível para download", "error");
+        showToast("Nenhum script disponÃ­vel para download", "error");
         return;
       }
       downloadTextFile(script, makeFileName(currentSession?.testName, suffix, getScriptExtension()));
@@ -360,7 +354,7 @@
           <div class="step-header">
             <span class="step-num">${index + 1}</span>
             <span class="step-name">${step.label}</span>
-            <span class="step-status-icon" id="pstep${index + 1}-status">⏳</span>
+            <span class="step-status-icon" id="pstep${index + 1}-status">â³</span>
           </div>
         `;
         grid.appendChild(card);
@@ -376,7 +370,7 @@
     const markPromptDefault = (key) => {
       const badge = byId(`${key}Badge`);
       if (!badge) return;
-      badge.textContent = "Padrão";
+      badge.textContent = "PadrÃ£o";
       badge.classList.remove("custom");
     };
 
@@ -396,9 +390,9 @@
 
       configs.forEach((config) => {
         const selected = selectedId === config.id ? " selected" : "";
-        const meta = `${config.provider} · ${config.model}`;
+        const meta = `${config.provider} Â· ${config.model}`;
         options.push(
-          `<option value="${escapeHtml(config.id)}"${selected}>${escapeHtml(config.name)} — ${escapeHtml(meta)}</option>`
+          `<option value="${escapeHtml(config.id)}"${selected}>${escapeHtml(config.name)} â€” ${escapeHtml(meta)}</option>`
         );
       });
 
@@ -418,7 +412,7 @@
         if (label) {
           label.textContent = selectedConfig
             ? `Selecionado: ${selectedConfig.name} (${selectedConfig.provider}/${selectedConfig.model})`
-            : "Herda a configuração global";
+            : "Herda a configuraÃ§Ã£o global";
         }
         const badge = byId(`${stage}LlmBadge`);
         if (badge) {
@@ -440,12 +434,12 @@
           <div style="display:flex; flex-direction: column; gap: 1rem; width: 79%" >
             <div class="step-header">
               <span class="step-name">${stageLabelMap[stage] || stage}</span>
-              <span class="step-badge" id="${stage}Badge">Padrão</span>
+              <span class="step-badge" id="${stage}Badge">PadrÃ£o</span>
             </div>
             <div class="prompt-panel hidden" id="${stage}PromptWrap">
               <textarea id="${stage}Prompt" class="prompt-textarea" rows="8"></textarea>
               <div class="step-actions">
-                <button type="button" class="btn-secondary btn-small" data-restore-prompt="${stage}">Restaurar padrão</button>
+                <button type="button" class="btn-secondary btn-small" data-restore-prompt="${stage}">Restaurar padrÃ£o</button>
               </div>
             </div>
           </div>
@@ -599,7 +593,7 @@
           setGherkinFileName(file.name);
         } catch (error) {
           console.error(error);
-          showToast(error?.message || "Não foi possível ler o arquivo", "error");
+          showToast(error?.message || "NÃ£o foi possÃ­vel ler o arquivo", "error");
           setGherkinFileName("");
         }
       });
@@ -622,9 +616,9 @@
       const card = document.createElement("div");
       card.className = "module-card";
       card.innerHTML = `
-        <h4>Módulo ${number}</h4>
+        <h4>MÃ³dulo ${number}</h4>
         <input class="module-url" type="url" placeholder="https://exemplo.com/pagina" />
-        <input class="module-purpose" type="text" placeholder="Finalidade do módulo" />
+        <input class="module-purpose" type="text" placeholder="Finalidade do mÃ³dulo" />
         <div class="module-steps"></div>
         <div class="module-actions">
           <button type="button" class="btn-secondary btn-small" data-action="add-step">+ Passo</button>
@@ -636,7 +630,7 @@
       const addStep = () => {
         const row = document.createElement("div");
         row.className = "step-row";
-        row.innerHTML = `<input class="step-input" type="text" placeholder="Descrição do passo" />`;
+        row.innerHTML = `<input class="step-input" type="text" placeholder="DescriÃ§Ã£o do passo" />`;
         stepsWrapper.appendChild(row);
       };
 
@@ -685,7 +679,7 @@
       list.innerHTML = "";
 
       if (!configs.length) {
-        list.innerHTML = '<p class="empty-state">Nenhuma configuração de LLM salva. Configure em <strong>Config. LLM</strong>.</p>';
+        list.innerHTML = '<p class="empty-state">Nenhuma configuraÃ§Ã£o de LLM salva. Configure em <strong>Config. LLM</strong>.</p>';
         refreshStageLLMSelectors();
         return;
       }
@@ -698,7 +692,7 @@
           <div class="provider-badge provider-badge-sm">${PROVIDER_SHORT[config.provider] || "?"}</div>
           <div class="llm-selector-copy">
             <div class="config-name">${escapeHtml(config.name)}</div>
-            <div class="config-meta">${escapeHtml(config.provider)} · ${escapeHtml(config.model)} · temp ${config.temperature}</div>
+            <div class="config-meta">${escapeHtml(config.provider)} Â· ${escapeHtml(config.model)} Â· temp ${config.temperature}</div>
           </div>
         `;
 
@@ -778,14 +772,14 @@
 
       const items = Array.isArray(variables) ? variables : variables?.detected_inputs || [];
       if (!items.length) {
-        container.innerHTML = '<p class="empty-state">Nenhuma variável detectada</p>';
+        container.innerHTML = '<p class="empty-state">Nenhuma variÃ¡vel detectada</p>';
         return;
       }
 
       items.forEach((item, index) => {
         const variable = typeof item === "object" ? item : { variable_name: `Var_${index + 1}`, current_value: item };
-        const name = variable.variable_name || variable.name || `Variável ${index + 1}`;
-        const description = variable.description || variable.placeholder || "Variável para parametrização";
+        const name = variable.variable_name || variable.name || `VariÃ¡vel ${index + 1}`;
+        const description = variable.description || variable.placeholder || "VariÃ¡vel para parametrizaÃ§Ã£o";
         const currentValue = variable.current_value || variable.suggestedValue || variable.suggested_value || variable.value || "";
 
         const card = document.createElement("div");
@@ -821,29 +815,29 @@
 
     const friendlyReportLabel = (key) => {
       const map = {
-        execution_analysis: "Análise da Execução",
-        final_conclusion: "Conclusão Final",
-        general_recommendations: "Recomendações Gerais",
-        logs_analysis: "Análise dos Logs",
-        homologation_status: "Status da Homologação",
+        execution_analysis: "AnÃ¡lise da ExecuÃ§Ã£o",
+        final_conclusion: "ConclusÃ£o Final",
+        general_recommendations: "RecomendaÃ§Ãµes Gerais",
+        logs_analysis: "AnÃ¡lise dos Logs",
+        homologation_status: "Status da HomologaÃ§Ã£o",
         success_rate: "Taxa de Sucesso",
         failure_rate: "Taxa de Falha",
-        probable_cause: "Causa Provável",
+        probable_cause: "Causa ProvÃ¡vel",
         broken_elements: "Elementos Quebrados",
         selector_issues: "Problemas de Seletor",
-        invalid_fields: "Campos Inválidos",
-        execution_time: "Tempo de Execução",
+        invalid_fields: "Campos InvÃ¡lidos",
+        execution_time: "Tempo de ExecuÃ§Ã£o",
         executed_steps: "Passos Executados",
         failed_steps: "Passos que Falharam",
-        improvement_suggestions: "Sugestões de Melhoria",
-        technical_diagnosis: "Diagnóstico Técnico",
-        possible_improvements: "Possíveis Melhorias",
+        improvement_suggestions: "SugestÃµes de Melhoria",
+        technical_diagnosis: "DiagnÃ³stico TÃ©cnico",
+        possible_improvements: "PossÃ­veis Melhorias",
         stability_rate: "Taxa de Estabilidade",
         flaky_probability: "Probabilidade de Flaky Test",
-        robustness_analysis: "Análise de Robustez",
+        robustness_analysis: "AnÃ¡lise de Robustez",
         timeline: "Timeline",
         prompts_used: "Prompts Utilizados",
-        exportables: "Artefatos Exportáveis",
+        exportables: "Artefatos ExportÃ¡veis",
         final_result: "Resultado Final",
       };
       return map[key] || key.replaceAll("_", " ");
@@ -855,11 +849,11 @@
       const entries = [
         ["test_passed", "Teste passou"],
         ["automation_reliability", "Confiabilidade"],
-        ["production_readiness", "Pronto para produção"],
-        ["business_validation_status", "Validação de negócio"],
+        ["production_readiness", "Pronto para produÃ§Ã£o"],
+        ["business_validation_status", "ValidaÃ§Ã£o de negÃ³cio"],
         ["main_failure_reason", "Falha principal"],
-        ["technical_diagnosis", "Diagnóstico técnico"],
-        ["final_conclusion", "Conclusão final"],
+        ["technical_diagnosis", "DiagnÃ³stico tÃ©cnico"],
+        ["final_conclusion", "ConclusÃ£o final"],
       ].filter(([key]) => Object.prototype.hasOwnProperty.call(finalResult, key));
 
       if (!entries.length) return false;
@@ -902,8 +896,8 @@
         const totalEditable = data.editable_fields.length;
         summaryContainer.innerHTML = `
           <div class="report-summary-grid">
-            <div class="report-metric"><span>Variáveis detectadas</span><strong>${escapeHtml(String(totalDetected))}</strong></div>
-            <div class="report-metric"><span>Campos editáveis</span><strong>${escapeHtml(String(totalEditable))}</strong></div>
+            <div class="report-metric"><span>VariÃ¡veis detectadas</span><strong>${escapeHtml(String(totalDetected))}</strong></div>
+            <div class="report-metric"><span>Campos editÃ¡veis</span><strong>${escapeHtml(String(totalEditable))}</strong></div>
           </div>
         `;
       }
@@ -916,11 +910,11 @@
         }
 
         container.innerHTML = items.map((item, index) => {
-          const name = item.variable_name || item.name || `Variável ${index + 1}`;
+          const name = item.variable_name || item.name || `VariÃ¡vel ${index + 1}`;
           const value = item.current_value ?? item.value ?? "";
-          const description = item.description || "Variável detectada automaticamente.";
+          const description = item.description || "VariÃ¡vel detectada automaticamente.";
           const type = item.type || "string";
-          const required = item.required === false ? "Opcional" : "Obrigatória";
+          const required = item.required === false ? "Opcional" : "ObrigatÃ³ria";
           const relatedSteps = Array.isArray(item.related_steps) ? item.related_steps : [];
           const stepTags = relatedSteps.length
             ? relatedSteps.map((step) => `<span class="chip">${escapeHtml(step)}</span>`).join("")
@@ -932,7 +926,7 @@
                 <div><span>Obrigatoriedade</span><strong>${escapeHtml(required)}</strong></div>
               </div>`
             : "";
-          const editableInput = mode === "Editável"
+          const editableInput = mode === "EditÃ¡vel"
             ? `<div class="validation-edit-field"><label>Novo valor</label><input class="validation-edit-value" type="text" value="${escapeHtml(prettyValue(value))}" placeholder="Digite o novo valor" /></div>`
             : "";
           const relatedStepsPreview = mode === "Detectada"
@@ -942,7 +936,7 @@
               </div>`
             : "";
           return `
-            <article class="validation-card validation-${mode.toLowerCase()}-card${mode === "Editável" ? " validation-edit-card" : ""}" data-name="${escapeHtml(name)}" data-current="${escapeHtml(prettyValue(value))}">
+            <article class="validation-card validation-${mode.toLowerCase()}-card${mode === "EditÃ¡vel" ? " validation-edit-card" : ""}" data-name="${escapeHtml(name)}" data-current="${escapeHtml(prettyValue(value))}">
               <div class="validation-card-head">
                 <div>
                   <div class="validation-card-title">${escapeHtml(name)}</div>
@@ -959,7 +953,7 @@
       };
 
       renderCardList(detectedContainer, data.detected_inputs, "Detectada");
-      renderCardList(editableContainer, data.editable_fields, "Editável");
+      renderCardList(editableContainer, data.editable_fields, "EditÃ¡vel");
     };
 
     const sanitizeModuleTreeForDisplay = (value) => {
@@ -1333,10 +1327,10 @@
           <div class="legend-list">
             <div class="legend-item"><span class="legend-swatch legend-root"></span><span>Caso de teste</span></div>
             <div class="legend-item"><span class="legend-swatch legend-step"></span><span>Passos do fluxo</span></div>
-            <div class="legend-item"><span class="legend-swatch legend-detail"></span><span>Elementos extraídos</span></div>
+            <div class="legend-item"><span class="legend-swatch legend-detail"></span><span>Elementos extraÃ­dos</span></div>
             <div class="legend-item"><span class="legend-swatch legend-property"></span><span>Propriedades do elemento</span></div>
             <div class="legend-item"><span class="legend-line legend-flow"></span><span>Fluxo principal</span></div>
-            <div class="legend-item"><span class="legend-line legend-child"></span><span>Relação pai/filho</span></div>
+            <div class="legend-item"><span class="legend-line legend-child"></span><span>RelaÃ§Ã£o pai/filho</span></div>
           </div>
         </aside>
         <div class="graph-stage">
@@ -1406,7 +1400,7 @@
       //   .attr("points", "0 0, 10 5, 0 10")
       //   .attr("fill", "#2563eb");
 
-      // cria id único para cada gráfico
+      // cria id Ãºnico para cada grÃ¡fico
       const markerId = `arrowhead-${containerId}`;
 
       // criar marker PRIMEIRO
@@ -1526,7 +1520,7 @@
     };
 
     const prettyValue = (value) => {
-      if (value === null || value === undefined || value === "") return "Não informado";
+      if (value === null || value === undefined || value === "") return "NÃ£o informado";
       if (Array.isArray(value)) {
         return value
           .map((item) => (typeof item === "object" ? JSON.stringify(item, null, 2) : String(item)))
@@ -1578,7 +1572,7 @@
       const list = Array.isArray(items) ? items : [];
 
       if (!list.length) {
-        container.innerHTML = `<p class="empty-state">Nenhum ${title.toLowerCase()} disponível</p>`;
+        container.innerHTML = `<p class="empty-state">Nenhum ${title.toLowerCase()} disponÃ­vel</p>`;
         return;
       }
 
@@ -1773,7 +1767,7 @@
     };
 
     const renderExecutionReport = (execution) => {
-      renderReportSection("executionContent", "Execução", execution, (value, container) => {
+      renderReportSection("executionContent", "ExecuÃ§Ã£o", execution, (value, container) => {
         const imageArtifacts = getImageArtifactPaths(
           value?.screenshots || [],
           value?.image_evidence || [],
@@ -1806,7 +1800,7 @@
         if (value.execution_log_lines?.length) {
           const logs = document.createElement("div");
           logs.className = "report-block";
-          logs.innerHTML = `<h4>Logs de execução</h4><pre>${escapeHtml(value.execution_log_lines.join("\n"))}</pre>`;
+          logs.innerHTML = `<h4>Logs de execuÃ§Ã£o</h4><pre>${escapeHtml(value.execution_log_lines.join("\n"))}</pre>`;
           container.appendChild(logs);
         }
 
@@ -1828,7 +1822,7 @@
         }
 
         if (value.evidence?.length) {
-          renderArtifacts(value.evidence, "executionArtifacts", "Evidências");
+          renderArtifacts(value.evidence, "executionArtifacts", "EvidÃªncias");
         } else if (!imageArtifacts.length) {
           renderArtifacts(value.screenshots || [], "executionArtifacts", "Screenshots");
         }
@@ -1836,7 +1830,7 @@
         if (value.test_results) {
           const summary = document.createElement("div");
           summary.className = "report-block";
-          summary.innerHTML = `<h4>Resumo técnico</h4><pre>${escapeHtml(JSON.stringify(value.test_results, null, 2))}</pre>`;
+          summary.innerHTML = `<h4>Resumo tÃ©cnico</h4><pre>${escapeHtml(JSON.stringify(value.test_results, null, 2))}</pre>`;
           container.appendChild(summary);
         }
       });
@@ -1846,10 +1840,10 @@
     const renderHomologationReport = (homologation) => {
       const banner = byId("homologationHeader");
       if (banner) {
-        banner.textContent = homologation?.homologation_status ? `Status: ${homologation.homologation_status}` : "Homologação atualizada";
+        banner.textContent = homologation?.homologation_status ? `Status: ${homologation.homologation_status}` : "HomologaÃ§Ã£o atualizada";
         banner.classList.remove("hidden");
       }
-      renderReportSection("homologationContent", "Homologação", homologation, (value, container) => {
+      renderReportSection("homologationContent", "HomologaÃ§Ã£o", homologation, (value, container) => {
         const imageArtifacts = getImageArtifactPaths(
           value?.execution_artifacts?.screenshots || [],
           value?.execution_artifacts?.image_evidence || [],
@@ -1863,8 +1857,8 @@
         const summaryFields = [
           ["Taxa de sucesso", value.success_rate],
           ["Falhas", value.failure_count || value.failures || value.error_count],
-          ["Causa provável", value.probable_cause],
-          ["Tempo de execução", value.execution_time || value.runtime],
+          ["Causa provÃ¡vel", value.probable_cause],
+          ["Tempo de execuÃ§Ã£o", value.execution_time || value.runtime],
         ].filter(([, fieldValue]) => fieldValue !== undefined && fieldValue !== null && fieldValue !== "");
 
         if (summaryFields.length) {
@@ -1885,7 +1879,7 @@
     };
 
     const renderFinalizationReport = (report) => {
-      renderReportSection("finalizationContent", "Finalização", report);
+      renderReportSection("finalizationContent", "FinalizaÃ§Ã£o", report);
       injectReportStatus("finalizationContent", "finalization", report);
       const exportables = report?.exportables || {};
       const container = byId("finalizationContent");
@@ -1911,7 +1905,7 @@
         const wrap = document.createElement("div");
         wrap.className = "report-block";
         wrap.innerHTML = `
-          <h4>Exportáveis</h4>
+          <h4>ExportÃ¡veis</h4>
           <div class="artifact-grid">
             ${exportables.json ? '<button type="button" class="artifact-chip" data-export="json">JSON</button>' : ""}
             ${exportables.html ? '<button type="button" class="artifact-chip" data-export="html">HTML</button>' : ""}
@@ -1923,7 +1917,7 @@
     };
 
     const renderRefactoringReport = (refactoring) => {
-      renderReportSection("refactoringContent", "Refatoração", refactoring, (value, container) => {
+      renderReportSection("refactoringContent", "RefatoraÃ§Ã£o", refactoring, (value, container) => {
         if (value.original_script || value.refactored_script) {
           const block = document.createElement("div");
           block.className = "report-block";
@@ -1971,7 +1965,7 @@
         ...(execution?.traces || []),
         ...(execution?.evidence || []),
       ];
-      renderArtifacts(artifacts, "executionArtifacts", artifacts.length ? "Artefatos de execução" : "Artefatos");
+      renderArtifacts(artifacts, "executionArtifacts", artifacts.length ? "Artefatos de execuÃ§Ã£o" : "Artefatos");
     };
 
     const buildTabContent = () =>
@@ -2011,25 +2005,25 @@
             <div id="tab-validation" class="result-tab">
               <div id="validationFeedback" class="status-banner hidden"></div>
               <div class="code-actions">
-                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-no-changes">Continuar sem alterações</button>
-                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-pipeline">Aplicar alterações e continuar</button>
+                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-no-changes">Continuar sem alteraÃ§Ãµes</button>
+                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-pipeline">Aplicar alteraÃ§Ãµes e continuar</button>
               </div>
               <div id="validationSummary"></div>
               <div class="validation-section">
                 <div class="validation-section-header">
-                  <h4>Variáveis detectadas</h4>
+                  <h4>VariÃ¡veis detectadas</h4>
                 </div>
                 <div id="validationDetectedInputs" class="validation-card-grid-list"></div>
               </div>
               <div class="validation-section">
                 <div class="validation-section-header">
-                  <h4>Campos editáveis</h4>
+                  <h4>Campos editÃ¡veis</h4>
                 </div>
                 <div id="validationEditableFields" class="validation-card-grid-list"></div>
               </div>
               <div class="form-group">
-                <label for="validationUserResponse">Resposta do usuário</label>
-                <textarea id="validationUserResponse" rows="5" placeholder="Explique a validação, ajuste os valores detectados ou descreva qualquer mudança necessária."></textarea>
+                <label for="validationUserResponse">Resposta do usuÃ¡rio</label>
+                <textarea id="validationUserResponse" rows="5" placeholder="Explique a validaÃ§Ã£o, ajuste os valores detectados ou descreva qualquer mudanÃ§a necessÃ¡ria."></textarea>
               </div>
             </div>
           `;
@@ -2039,7 +2033,7 @@
           return `
             <div id="tab-confirmation" class="result-tab">
               <div class="report-block">
-                <h4>Consolidação da Confirmação</h4>
+                <h4>ConsolidaÃ§Ã£o da ConfirmaÃ§Ã£o</h4>
                 <div class="split-grid">
                   <div>
                     <div class="code-actions code-actions-inline">
@@ -2053,7 +2047,7 @@
                       <button type="button" class="btn-secondary btn-small" data-copy-target="confirmationContent">Copiar</button>
                       <button type="button" class="btn-secondary btn-small" data-action="download-script-target" data-script-target="confirmationContent" data-script-suffix="confirmed">Baixar</button>
                     </div>
-                    <strong>Script ajustado na validação</strong><pre id="confirmationContent"><code></code></pre>
+                    <strong>Script ajustado na validaÃ§Ã£o</strong><pre id="confirmationContent"><code></code></pre>
                   </div>
                 </div>
               </div>
@@ -2087,7 +2081,7 @@
               <div class="code-actions">
                 <button type="button" class="btn-secondary" data-action="rerun-from-zero">Executar do zero novamente</button>
                 <button type="button" class="btn-primary btn-primary-inline" data-action="apply-refactor-stage">Executar script refatorado a partir de Confirmation</button>
-                <button type="button" class="btn-secondary" data-action="finalize-execution">Finalizar execução</button>
+                <button type="button" class="btn-secondary" data-action="finalize-execution">Finalizar execuÃ§Ã£o</button>
               </div>
               <div class="form-group">
                 <label for="refactoringScriptEditor">Script refatorado</label>
@@ -2171,7 +2165,7 @@
 
       container.innerHTML = `
         <div class="results-tabs">
-          ${RESULT_TABS.map((tab, index) => `<button type="button" class="result-tab-btn${index === 0 ? " active" : ""}" id="result-tab-btn-${tab.key}" data-result-tab="${tab.key}"><span>${tab.title}</span><span class="result-tab-indicator" id="result-status-${tab.key}">○</span></button>`).join("")}
+          ${RESULT_TABS.map((tab, index) => `<button type="button" class="result-tab-btn${index === 0 ? " active" : ""}" id="result-tab-btn-${tab.key}" data-result-tab="${tab.key}"><span>${tab.title}</span><span class="result-tab-indicator" id="result-status-${tab.key}">â—‹</span></button>`).join("")}
         </div>
         <div class="result-content">${buildTabContent()}</div>
       `;
@@ -2254,23 +2248,23 @@
     const renderPhaseOneResults = (results) => {
       setStep(1, "ok");
       if (results.structured) {
-        renderGraphView("structuredTreeContent", results.structured, "Estruturação");
+        renderGraphView("structuredTreeContent", results.structured, "EstruturaÃ§Ã£o");
         updateCode("structuredJsonContent", JSON.stringify(results.structured, null, 2));
-        addLog("Estruturação concluída", "success", "Estruturação");
+        addLog("EstruturaÃ§Ã£o concluÃ­da", "success", "EstruturaÃ§Ã£o");
       }
 
       setStep(2, "ok");
       if (results.extracted) {
-        renderGraphView("extractedTreeContent", results.extracted, "Extração");
+        renderGraphView("extractedTreeContent", results.extracted, "ExtraÃ§Ã£o");
         updateCode("extractedJsonContent", JSON.stringify(results.extracted, null, 2));
-        addLog("Extração concluída", "success", "Extração");
+        addLog("ExtraÃ§Ã£o concluÃ­da", "success", "ExtraÃ§Ã£o");
       }
 
       setStep(3, "ok");
       if (results.refined) {
         renderGraphView("refinedTreeContent", results.refined, "Refinamento");
         updateCode("refinedJsonContent", JSON.stringify(results.refined, null, 2));
-        addLog("Refinamento concluído", "success", "Refinamento");
+        addLog("Refinamento concluÃ­do", "success", "Refinamento");
       }
 
       setStep(4, "ok");
@@ -2282,18 +2276,18 @@
         if (confirmationEditor && !confirmationEditor.value) {
           confirmationEditor.value = results.script;
         }
-        addLog("Geração concluída", "success", "Geração");
+        addLog("GeraÃ§Ã£o concluÃ­da", "success", "GeraÃ§Ã£o");
       }
 
       setStep(5, "ok");
       renderValidationCards(results.validation || results);
-      setValidationFeedback("A validação está pronta. Você pode continuar sem mudanças ou ajustar os campos detectados.", "info");
-      addLog("Validação concluída", "success", "Validação");
+      setValidationFeedback("A validaÃ§Ã£o estÃ¡ pronta. VocÃª pode continuar sem mudanÃ§as ou ajustar os campos detectados.", "info");
+      addLog("ValidaÃ§Ã£o concluÃ­da", "success", "ValidaÃ§Ã£o");
     };
 
     const renderPhaseTwoResults = (results) => {
       setStep(6, "ok");
-      addLog(results.confirmation_used_llm ? "Confirmação concluída com ajustes manuais" : "Confirmação concluída sem alterações", "success", "Confirmação");
+      addLog(results.confirmation_used_llm ? "ConfirmaÃ§Ã£o concluÃ­da com ajustes manuais" : "ConfirmaÃ§Ã£o concluÃ­da sem alteraÃ§Ãµes", "success", "ConfirmaÃ§Ã£o");
       if (results.confirmed_script) {
         updateCode("confirmationContent", results.confirmed_script);
       }
@@ -2301,17 +2295,17 @@
       setStep(7, "ok");
       if (results.execution || results.execution_result) {
         renderExecutionReport(results.execution || results.execution_result);
-        addLog("Execução concluída", "success", "Execução");
+        addLog("ExecuÃ§Ã£o concluÃ­da", "success", "ExecuÃ§Ã£o");
       }
 
       setStep(8, "ok");
       if (results.homologation) {
         renderHomologationReport(results.homologation);
-        addLog("Homologação concluída", "success", "Homologação");
+        addLog("HomologaÃ§Ã£o concluÃ­da", "success", "HomologaÃ§Ã£o");
       }
 
       setStep(9, "ok");
-      addLog("Finalização concluída", "success", "Finalização");
+      addLog("FinalizaÃ§Ã£o concluÃ­da", "success", "FinalizaÃ§Ã£o");
       if (results.finalReport || results.exportables?.json) {
         renderFinalizationReport(results.finalReport || results.exportables?.json);
       }
@@ -2319,7 +2313,7 @@
       setStep(10, "ok");
       if (results.refactoring || results.refactoredScript) {
         renderRefactoringReport(results.refactoring || { refactored_script: results.refactoredScript });
-        addLog("Refatoração concluída", "success", "Refatoração");
+        addLog("RefatoraÃ§Ã£o concluÃ­da", "success", "RefatoraÃ§Ã£o");
       }
     };
 
@@ -2331,7 +2325,7 @@
         const llmConfig = configs.find((config) => config.id === selectedId);
 
         if (!llmConfig) {
-          showToast("Selecione uma configuração de LLM", "error");
+          showToast("Selecione uma configuraÃ§Ã£o de LLM", "error");
           return;
         }
 
@@ -2382,7 +2376,7 @@
           backendInputMode = "test_case";
           urls = payload.modules.map((module) => module.url).filter(Boolean);
           if (!testDescription) {
-            showToast("Informe o título estruturado", "error");
+            showToast("Informe o tÃ­tulo estruturado", "error");
             return;
           }
         }
@@ -2448,13 +2442,13 @@
         }
 
         if (currentSession.awaitingUserResponse) {
-          addLog("Pipeline pausado na validação. Aguardando resposta do usuário.", "info");
-          setValidationFeedback("Pipeline pausada para validação humana. Revise os campos e confirme para continuar.", "warning");
+          addLog("Pipeline pausado na validaÃ§Ã£o. Aguardando resposta do usuÃ¡rio.", "info");
+          setValidationFeedback("Pipeline pausada para validaÃ§Ã£o humana. Revise os campos e confirme para continuar.", "warning");
         }
 
         renderPhaseOneResults(results);
         activateResultTab("validation");
-        showToast("Validação pronta. Revise os dados e continue quando estiver pronto.", "success");
+        showToast("ValidaÃ§Ã£o pronta. Revise os dados e continue quando estiver pronto.", "success");
       } catch (error) {
         console.error(error);
         setStep(1, "error");
@@ -2466,7 +2460,7 @@
 
     const continueGenerationPipeline = async (withManualChanges = true) => {
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline ID não encontrado", "error");
+        showToast("Pipeline ID nÃ£o encontrado", "error");
         return;
       }
 
@@ -2480,7 +2474,7 @@
         );
         currentSession.resumeFromStage = "confirmation";
         setValidationFeedback("A resposta foi enviada. O pipeline voltou a rodar.", "success");
-        addLog("Continuando pipeline após validação...", "info", "Validação");
+        addLog("Continuando pipeline apÃ³s validaÃ§Ã£o...", "info", "ValidaÃ§Ã£o");
         const manualChanges = collectValidationChanges(withManualChanges);
         setStep(6, "running");
         activateResultTab("logs");
@@ -2511,8 +2505,8 @@
           status: "success",
         });
 
-        addLog(`Pipeline completa finalizada em ${duration.toFixed(2)}s`, "success", "Finalização");
-        showToast("Pipeline concluída com sucesso", "success");
+        addLog(`Pipeline completa finalizada em ${duration.toFixed(2)}s`, "success", "FinalizaÃ§Ã£o");
+        showToast("Pipeline concluÃ­da com sucesso", "success");
         onGenerationComplete?.();
         currentSession.completed = true;
       } catch (error) {
@@ -2526,7 +2520,7 @@
 
     const relaunchPipelineFromStage = async () => {
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline não encontrada", "error");
+        showToast("Pipeline nÃ£o encontrada", "error");
         return;
       }
 
@@ -2547,7 +2541,7 @@
 
       try {
         setValidationFeedback(`Reexecutando a pipeline a partir de ${resumeStage}.`, "info");
-        addLog(`Reexecutando a pipeline a partir de ${resumeStage}...`, "info", "Refatoração");
+        addLog(`Reexecutando a pipeline a partir de ${resumeStage}...`, "info", "RefatoraÃ§Ã£o");
         currentSession.scriptOverride = scriptOverride;
         currentSession.resumeFromStage = resumeStage;
         currentSession.promptOverrides = pipelineOverrides.promptOverrides;
@@ -2562,7 +2556,7 @@
         };
         renderPhaseTwoResults(results);
         currentSession.completed = true;
-        showToast("Pipeline reiniciada a partir do estágio selecionado", "success");
+        showToast("Pipeline reiniciada a partir do estÃ¡gio selecionado", "success");
       } catch (error) {
         console.error(error);
         addLog(`Falha ao reexecutar: ${error.message}`, "error");
@@ -2579,7 +2573,7 @@
       }
 
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline não encontrada", "error");
+        showToast("Pipeline nÃ£o encontrada", "error");
         return;
       }
 
@@ -2596,7 +2590,7 @@
         showToast("Script refatorado aplicado e pipeline reexecutada", "success");
       } catch (error) {
         console.error(error);
-        addLog(`Falha ao aplicar refatoração: ${error.message}`, "error");
+        addLog(`Falha ao aplicar refatoraÃ§Ã£o: ${error.message}`, "error");
         showToast(error.message, "error");
       }
     };
@@ -2629,8 +2623,8 @@
     };
 
     const finalizeExecution = () => {
-      addLog("Execução finalizada pelo usuário.", "success", "Finalização");
-      showToast("Execução finalizada", "success");
+      addLog("ExecuÃ§Ã£o finalizada pelo usuÃ¡rio.", "success", "FinalizaÃ§Ã£o");
+      showToast("ExecuÃ§Ã£o finalizada", "success");
       currentSession = null;
       clearCurrentSession();
       root.api?.geniaAPI?.closePipelineLogStream?.();
