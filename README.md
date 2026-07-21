@@ -37,29 +37,108 @@ The artifact is self-contained and organized to support both reuse and reproduci
 
 ```text
 GenIA-E2ETest-Platform/
-├── backend/
-│   ├── api.py
-│   ├── app.py
-│   ├── config.py
-│   ├── application/
-│   ├── domain/
-│   ├── http/
-│   ├── infrastructure/
-│   ├── llms/
-│   ├── pipelines/
-│   ├── prompts/
-│   └── tests/
-├── frontend/
-│   ├── index.html
-│   ├── styles.css
-│   ├── geniaLogo.jpg
-│   └── scripts/
-│       ├── core/
-│       ├── features/
-│       ├── services/
-│       └── ui/
-├── LICENSE
-└── README.md
+├── backend/                        # Flask API, pipeline orchestration, execution strategies, and backend tests
+│   ├── api.py                      # Local backend entry point used to start the server in development
+│   ├── app.py                      # Compatibility facade that exposes the Flask application object
+│   ├── config.py                   # Centralized runtime configuration and environment resolution
+│   ├── Aptfile                     # OS-level packages required by the backend container/runtime
+│   ├── Dockerfile                  # Container image definition for deployment and reproducible runs
+│   ├── requirements.txt            # Python dependencies required by the backend
+│   ├── application/                # Application-level orchestration and prompt helpers
+│   │   ├── __init__.py             # Package marker
+│   │   ├── pipeline.py             # Public pipeline facade consumed by the HTTP layer
+│   │   └── prompts.py              # Prompt selection and prompt-bundle helpers
+│   ├── domain/                     # Core domain models and framework metadata
+│   │   ├── __init__.py             # Package marker
+│   │   ├── frameworks.py           # Framework/language catalog used by the application
+│   │   └── models.py               # Shared domain and response data models
+│   ├── http/                       # HTTP app factory, routes, and middleware wiring
+│   │   ├── __init__.py             # Package marker
+│   │   └── app_factory.py          # Flask app creation, routes, CORS, and socket wiring
+│   ├── infrastructure/             # Execution engine, LLM adapters, and framework/language strategies
+│   │   ├── __init__.py             # Package marker
+│   │   ├── TestExecutor.py         # Dispatches execution to the correct framework/language strategy
+│   │   ├── llm_factory.py          # Creates the correct LLM provider adapter
+│   │   └── frameworks_languages/   # Local execution strategies per framework/language combination
+│   │       ├── __init__.py         # Exposes the execution strategy registry
+│   │       ├── base.py             # Shared execution helpers used by all strategies
+│   │       ├── cypress.py          # Cypress execution strategies
+│   │       ├── java_native.py      # Java/JUnit helper utilities and runner generation
+│   │       ├── junit.py            # JUnit + Selenium execution strategy
+│   │       ├── playwright.py       # Playwright execution strategies
+│   │       ├── pytest.py           # Pytest + Selenium execution strategy
+│   │       ├── registry.py         # Maps framework/language pairs to execution strategies
+│   │       ├── robotframework.py   # Robot Framework + SeleniumLibrary execution strategy
+│   │       ├── runtime.py          # Runtime translation helpers used by JavaScript-based runners
+│   │       └── selenium.py         # Selenium execution strategies for supported languages
+│   ├── llms/                       # Provider-specific LLM clients
+│   │   ├── __init__.py             # Package marker
+│   │   ├── anthropic.py            # Anthropic client integration
+│   │   ├── cohere.py               # Cohere client integration
+│   │   ├── gemini.py               # Google Gemini client integration
+│   │   └── openai.py               # OpenAI client integration
+│   ├── pipelines/                  # GenIA pipeline orchestration and stage implementations
+│   │   ├── __init__.py             # Package marker
+│   │   ├── genia_orchestrator.py   # Main orchestrator that coordinates the full pipeline
+│   │   ├── shared.py               # Shared pipeline helpers reused by multiple stages
+│   │   └── stages/                 # Individual pipeline stages
+│   │       ├── __init__.py         # Package marker
+│   │       ├── base.py             # Base stage abstractions
+│   │       ├── confirmation.py     # Validation confirmation stage
+│   │       ├── execution.py        # Test execution stage
+│   │       ├── extraction.py       # UI / element extraction stage
+│   │       ├── finalization.py     # Finalization stage
+│   │       ├── generation.py       # Script generation stage
+│   │       ├── homologation.py     # Homologation/reporting stage
+│   │       ├── refactoring.py      # Script refactoring stage
+│   │       ├── refinement.py       # Refinement stage
+│   │       ├── structuring.py      # Test case restructuring stage
+│   │       └── validation.py       # Human validation stage
+│   ├── prompts/                    # Prompt templates used by the generation pipeline
+│       ├── confirmation.txt        # Prompt for confirmation stage
+│       ├── extraction.txt          # Prompt for extraction stage
+│       ├── execution.txt           # Prompt for execution guidance
+│       ├── finalization.txt        # Prompt for finalization stage
+│       ├── homologation.txt        # Prompt for homologation stage
+│       ├── refinement.txt          # Prompt for refinement stage
+│       ├── refactoring.txt         # Prompt for refactoring stage
+│       ├── structuring.txt         # Prompt for structuring stage
+│       ├── structuring_user_history.txt  # Prompt variant for user-history based structuring
+│       ├── validation.txt          # Prompt for validation stage
+│       └── generation/             # Framework-specific generation prompts
+│           ├── cypress.txt         # Cypress generation prompt
+│           ├── junit.txt           # JUnit/Java generation prompt
+│           ├── playwright.txt      # Playwright generation prompt
+│           ├── pytest.txt          # Pytest generation prompt
+│           ├── robot_framework.txt # Robot Framework generation prompt
+│           └── selenium.txt        # Selenium generation prompt
+├── frontend/                       # Browser UI for authentication, configuration, generation, and results
+│   ├── index.html                  # Main single-page frontend entry
+│   ├── styles.css                  # Global visual styling
+│   ├── geniaLogo.jpg               # Branding asset used in the UI
+│   └── scripts/                    # Modular frontend JavaScript code
+│       ├── core/                   # Shared DOM, state, utility, and constant helpers
+│       │   ├── constants.js        # Shared constant values and lookup tables
+│       │   ├── dom.js              # DOM query helpers
+│       │   ├── state.js            # In-memory app state and controller registry
+│       │   └── utils.js            # Reusable helper utilities
+│       ├── features/               # Screen-specific UI controllers and workflows
+│       │   ├── auth.js             # Login and registration UI controller
+│       │   ├── dashboard.js        # Dashboard metrics and summary controller
+│       │   ├── generator.js        # Test generation workflow controller
+│       │   ├── history.js          # Execution history UI controller
+│       │   ├── llm-config.js       # LLM configuration management controller
+│       │   └── navigation.js       # Sidebar navigation controller
+│       ├── services/               # API, auth, and generation service layers
+│       │   ├── api.js              # Backend API client
+│       │   ├── auth.js             # Local authentication and persistence service
+│       │   └── generation.js       # Generation pipeline service helpers
+│       ├── ui/                     # Reusable UI layout and toast helpers
+│       │   ├── layout.js           # Shell visibility and layout helpers
+│       │   └── toast.js            # Toast notification helper
+│       └── main.js                 # Frontend bootstrap and controller wiring
+├── LICENSE                         # Open-source license for artifact distribution
+└── README.md                       # Artifact documentation and usage guide
 ```
 
 ---
@@ -112,7 +191,6 @@ py -3.12 -m venv venv
 ```bash
 pip install -r requirements.txt
 playwright install
-playwright install-deps  # Optional: needed only for Linux systems
 ```
 
 4. Start the backend API:

@@ -155,11 +155,11 @@
     const renderStageOutput = (stageKey, payload) => {
       switch (stageKey) {
         case "restructure":
-          renderGraphView("structuredTreeContent", getGraphDataForStage(stageKey, payload), "EstruturaÃ§Ã£o");
+          renderGraphView("structuredTreeContent", getGraphDataForStage(stageKey, payload), "Estruturação");
           updateCode("structuredJsonContent", JSON.stringify(sanitizeModuleTreeForDisplay(payload?.structured || payload), null, 2));
           break;
         case "extraction":
-          renderGraphView("extractedTreeContent", getGraphDataForStage(stageKey, payload), "ExtraÃ§Ã£o");
+          renderGraphView("extractedTreeContent", getGraphDataForStage(stageKey, payload), "Extração");
           updateCode("extractedJsonContent", JSON.stringify(sanitizeModuleTreeForDisplay(payload?.extracted_snapshot || payload?.elements || payload), null, 2));
           break;
         case "refinement":
@@ -246,8 +246,8 @@
         const validation = payload;
         setStep(5, "ok");
         renderValidationCards(validation);
-        addLog("A etapa de validaÃ§Ã£o terminou e a pipeline estÃ¡ pronta para continuar.", "success", "ValidaÃ§Ã£o");
-        showToast("ValidaÃ§Ã£o concluÃ­da. A pipeline pode continuar.", "success");
+        addLog("A etapa de validação terminou e a pipeline está pronta para continuar.", "success", "Validação");
+        showToast("Validação concluída. A pipeline pode continuar.", "success");
       }
 
       if (type === "STAGE_START" && channel === "confirmation") {
@@ -260,8 +260,8 @@
 
       if (type === "STAGE_START" && channel === "execution") {
         setStep(7, "running");
-        addLog("A pipeline voltou a rodar apÃ³s a validaÃ§Ã£o.", "info", "ExecuÃ§Ã£o");
-        showToast("Pipeline retomada e em execuÃ§Ã£o", "info");
+        addLog("A pipeline voltou a rodar após a validação.", "info", "Execução");
+        showToast("Pipeline retomada e em execução", "info");
       }
 
       if (type === "STAGE_START" && channel === "homologation") {
@@ -317,7 +317,7 @@
         await navigator.clipboard.writeText(text);
         showToast("Copiado", "success");
       } catch {
-        showToast("NÃ£o foi possÃ­vel copiar", "error");
+        showToast("Não foi possível copiar", "error");
       }
     };
 
@@ -325,7 +325,7 @@
       const el = byId(targetId);
       const script = el?.querySelector("code")?.textContent || el?.textContent || "";
       if (!script) {
-        showToast("Nenhum script disponÃ­vel para download", "error");
+        showToast("Nenhum script disponível para download", "error");
         return;
       }
       downloadTextFile(script, makeFileName(currentSession?.testName, suffix, getScriptExtension()));
@@ -370,7 +370,7 @@
     const markPromptDefault = (key) => {
       const badge = byId(`${key}Badge`);
       if (!badge) return;
-      badge.textContent = "PadrÃ£o";
+      badge.textContent = "Padrão";
       badge.classList.remove("custom");
     };
 
@@ -392,7 +392,7 @@
         const selected = selectedId === config.id ? " selected" : "";
         const meta = `${config.provider} Â· ${config.model}`;
         options.push(
-          `<option value="${escapeHtml(config.id)}"${selected}>${escapeHtml(config.name)} â€” ${escapeHtml(meta)}</option>`
+          `<option value="${escapeHtml(config.id)}"${selected}>${escapeHtml(config.name)} — ${escapeHtml(meta)}</option>`
         );
       });
 
@@ -412,7 +412,7 @@
         if (label) {
           label.textContent = selectedConfig
             ? `Selecionado: ${selectedConfig.name} (${selectedConfig.provider}/${selectedConfig.model})`
-            : "Herda a configuraÃ§Ã£o global";
+            : "Herda a configuração global";
         }
         const badge = byId(`${stage}LlmBadge`);
         if (badge) {
@@ -434,12 +434,12 @@
           <div style="display:flex; flex-direction: column; gap: 1rem; width: 79%" >
             <div class="step-header">
               <span class="step-name">${stageLabelMap[stage] || stage}</span>
-              <span class="step-badge" id="${stage}Badge">PadrÃ£o</span>
+              <span class="step-badge" id="${stage}Badge">Padrão</span>
             </div>
             <div class="prompt-panel hidden" id="${stage}PromptWrap">
               <textarea id="${stage}Prompt" class="prompt-textarea" rows="8"></textarea>
               <div class="step-actions">
-                <button type="button" class="btn-secondary btn-small" data-restore-prompt="${stage}">Restaurar padrÃ£o</button>
+                <button type="button" class="btn-secondary btn-small" data-restore-prompt="${stage}">Restaurar padrão</button>
               </div>
             </div>
           </div>
@@ -593,7 +593,7 @@
           setGherkinFileName(file.name);
         } catch (error) {
           console.error(error);
-          showToast(error?.message || "NÃ£o foi possÃ­vel ler o arquivo", "error");
+          showToast(error?.message || "Não foi possível ler o arquivo", "error");
           setGherkinFileName("");
         }
       });
@@ -616,9 +616,9 @@
       const card = document.createElement("div");
       card.className = "module-card";
       card.innerHTML = `
-        <h4>MÃ³dulo ${number}</h4>
+        <h4>Módulo ${number}</h4>
         <input class="module-url" type="url" placeholder="https://exemplo.com/pagina" />
-        <input class="module-purpose" type="text" placeholder="Finalidade do mÃ³dulo" />
+        <input class="module-purpose" type="text" placeholder="Finalidade do módulo" />
         <div class="module-steps"></div>
         <div class="module-actions">
           <button type="button" class="btn-secondary btn-small" data-action="add-step">+ Passo</button>
@@ -630,7 +630,7 @@
       const addStep = () => {
         const row = document.createElement("div");
         row.className = "step-row";
-        row.innerHTML = `<input class="step-input" type="text" placeholder="DescriÃ§Ã£o do passo" />`;
+        row.innerHTML = `<input class="step-input" type="text" placeholder="Descrição do passo" />`;
         stepsWrapper.appendChild(row);
       };
 
@@ -679,7 +679,7 @@
       list.innerHTML = "";
 
       if (!configs.length) {
-        list.innerHTML = '<p class="empty-state">Nenhuma configuraÃ§Ã£o de LLM salva. Configure em <strong>Config. LLM</strong>.</p>';
+        list.innerHTML = '<p class="empty-state">Nenhuma configuração de LLM salva. Configure em <strong>Config. LLM</strong>.</p>';
         refreshStageLLMSelectors();
         return;
       }
@@ -772,14 +772,14 @@
 
       const items = Array.isArray(variables) ? variables : variables?.detected_inputs || [];
       if (!items.length) {
-        container.innerHTML = '<p class="empty-state">Nenhuma variÃ¡vel detectada</p>';
+        container.innerHTML = '<p class="empty-state">Nenhuma variável detectada</p>';
         return;
       }
 
       items.forEach((item, index) => {
         const variable = typeof item === "object" ? item : { variable_name: `Var_${index + 1}`, current_value: item };
-        const name = variable.variable_name || variable.name || `VariÃ¡vel ${index + 1}`;
-        const description = variable.description || variable.placeholder || "VariÃ¡vel para parametrizaÃ§Ã£o";
+        const name = variable.variable_name || variable.name || `Variável ${index + 1}`;
+        const description = variable.description || variable.placeholder || "Variável para parametrização";
         const currentValue = variable.current_value || variable.suggestedValue || variable.suggested_value || variable.value || "";
 
         const card = document.createElement("div");
@@ -815,29 +815,29 @@
 
     const friendlyReportLabel = (key) => {
       const map = {
-        execution_analysis: "AnÃ¡lise da ExecuÃ§Ã£o",
-        final_conclusion: "ConclusÃ£o Final",
-        general_recommendations: "RecomendaÃ§Ãµes Gerais",
-        logs_analysis: "AnÃ¡lise dos Logs",
-        homologation_status: "Status da HomologaÃ§Ã£o",
+        execution_analysis: "Análise da Execução",
+        final_conclusion: "Conclusão Final",
+        general_recommendations: "RecomendaçÃµes Gerais",
+        logs_analysis: "Análise dos Logs",
+        homologation_status: "Status da Homologação",
         success_rate: "Taxa de Sucesso",
         failure_rate: "Taxa de Falha",
-        probable_cause: "Causa ProvÃ¡vel",
+        probable_cause: "Causa Provável",
         broken_elements: "Elementos Quebrados",
         selector_issues: "Problemas de Seletor",
-        invalid_fields: "Campos InvÃ¡lidos",
-        execution_time: "Tempo de ExecuÃ§Ã£o",
+        invalid_fields: "Campos Inválidos",
+        execution_time: "Tempo de Execução",
         executed_steps: "Passos Executados",
         failed_steps: "Passos que Falharam",
         improvement_suggestions: "SugestÃµes de Melhoria",
-        technical_diagnosis: "DiagnÃ³stico TÃ©cnico",
-        possible_improvements: "PossÃ­veis Melhorias",
+        technical_diagnosis: "Diagnóstico Técnico",
+        possible_improvements: "Possíveis Melhorias",
         stability_rate: "Taxa de Estabilidade",
         flaky_probability: "Probabilidade de Flaky Test",
-        robustness_analysis: "AnÃ¡lise de Robustez",
+        robustness_analysis: "Análise de Robustez",
         timeline: "Timeline",
         prompts_used: "Prompts Utilizados",
-        exportables: "Artefatos ExportÃ¡veis",
+        exportables: "Artefatos Exportáveis",
         final_result: "Resultado Final",
       };
       return map[key] || key.replaceAll("_", " ");
@@ -849,11 +849,11 @@
       const entries = [
         ["test_passed", "Teste passou"],
         ["automation_reliability", "Confiabilidade"],
-        ["production_readiness", "Pronto para produÃ§Ã£o"],
-        ["business_validation_status", "ValidaÃ§Ã£o de negÃ³cio"],
+        ["production_readiness", "Pronto para produção"],
+        ["business_validation_status", "Validação de negócio"],
         ["main_failure_reason", "Falha principal"],
-        ["technical_diagnosis", "DiagnÃ³stico tÃ©cnico"],
-        ["final_conclusion", "ConclusÃ£o final"],
+        ["technical_diagnosis", "Diagnóstico técnico"],
+        ["final_conclusion", "Conclusão final"],
       ].filter(([key]) => Object.prototype.hasOwnProperty.call(finalResult, key));
 
       if (!entries.length) return false;
@@ -896,8 +896,8 @@
         const totalEditable = data.editable_fields.length;
         summaryContainer.innerHTML = `
           <div class="report-summary-grid">
-            <div class="report-metric"><span>VariÃ¡veis detectadas</span><strong>${escapeHtml(String(totalDetected))}</strong></div>
-            <div class="report-metric"><span>Campos editÃ¡veis</span><strong>${escapeHtml(String(totalEditable))}</strong></div>
+            <div class="report-metric"><span>Variáveis detectadas</span><strong>${escapeHtml(String(totalDetected))}</strong></div>
+            <div class="report-metric"><span>Campos editáveis</span><strong>${escapeHtml(String(totalEditable))}</strong></div>
           </div>
         `;
       }
@@ -910,11 +910,11 @@
         }
 
         container.innerHTML = items.map((item, index) => {
-          const name = item.variable_name || item.name || `VariÃ¡vel ${index + 1}`;
+          const name = item.variable_name || item.name || `Variável ${index + 1}`;
           const value = item.current_value ?? item.value ?? "";
-          const description = item.description || "VariÃ¡vel detectada automaticamente.";
+          const description = item.description || "Variável detectada automaticamente.";
           const type = item.type || "string";
-          const required = item.required === false ? "Opcional" : "ObrigatÃ³ria";
+          const required = item.required === false ? "Opcional" : "Obrigatória";
           const relatedSteps = Array.isArray(item.related_steps) ? item.related_steps : [];
           const stepTags = relatedSteps.length
             ? relatedSteps.map((step) => `<span class="chip">${escapeHtml(step)}</span>`).join("")
@@ -926,7 +926,7 @@
                 <div><span>Obrigatoriedade</span><strong>${escapeHtml(required)}</strong></div>
               </div>`
             : "";
-          const editableInput = mode === "EditÃ¡vel"
+          const editableInput = mode === "Editável"
             ? `<div class="validation-edit-field"><label>Novo valor</label><input class="validation-edit-value" type="text" value="${escapeHtml(prettyValue(value))}" placeholder="Digite o novo valor" /></div>`
             : "";
           const relatedStepsPreview = mode === "Detectada"
@@ -936,7 +936,7 @@
               </div>`
             : "";
           return `
-            <article class="validation-card validation-${mode.toLowerCase()}-card${mode === "EditÃ¡vel" ? " validation-edit-card" : ""}" data-name="${escapeHtml(name)}" data-current="${escapeHtml(prettyValue(value))}">
+            <article class="validation-card validation-${mode.toLowerCase()}-card${mode === "Editável" ? " validation-edit-card" : ""}" data-name="${escapeHtml(name)}" data-current="${escapeHtml(prettyValue(value))}">
               <div class="validation-card-head">
                 <div>
                   <div class="validation-card-title">${escapeHtml(name)}</div>
@@ -953,7 +953,7 @@
       };
 
       renderCardList(detectedContainer, data.detected_inputs, "Detectada");
-      renderCardList(editableContainer, data.editable_fields, "EditÃ¡vel");
+      renderCardList(editableContainer, data.editable_fields, "Editável");
     };
 
     const sanitizeModuleTreeForDisplay = (value) => {
@@ -1327,10 +1327,10 @@
           <div class="legend-list">
             <div class="legend-item"><span class="legend-swatch legend-root"></span><span>Caso de teste</span></div>
             <div class="legend-item"><span class="legend-swatch legend-step"></span><span>Passos do fluxo</span></div>
-            <div class="legend-item"><span class="legend-swatch legend-detail"></span><span>Elementos extraÃ­dos</span></div>
+            <div class="legend-item"><span class="legend-swatch legend-detail"></span><span>Elementos extraídos</span></div>
             <div class="legend-item"><span class="legend-swatch legend-property"></span><span>Propriedades do elemento</span></div>
             <div class="legend-item"><span class="legend-line legend-flow"></span><span>Fluxo principal</span></div>
-            <div class="legend-item"><span class="legend-line legend-child"></span><span>RelaÃ§Ã£o pai/filho</span></div>
+            <div class="legend-item"><span class="legend-line legend-child"></span><span>Relação pai/filho</span></div>
           </div>
         </aside>
         <div class="graph-stage">
@@ -1495,7 +1495,7 @@
     };
 
     const prettyValue = (value) => {
-      if (value === null || value === undefined || value === "") return "NÃ£o informado";
+      if (value === null || value === undefined || value === "") return "Não informado";
       if (Array.isArray(value)) {
         return value
           .map((item) => (typeof item === "object" ? JSON.stringify(item, null, 2) : String(item)))
@@ -1547,7 +1547,7 @@
       const list = Array.isArray(items) ? items : [];
 
       if (!list.length) {
-        container.innerHTML = `<p class="empty-state">Nenhum ${title.toLowerCase()} disponÃ­vel</p>`;
+        container.innerHTML = `<p class="empty-state">Nenhum ${title.toLowerCase()} disponível</p>`;
         return;
       }
 
@@ -1742,7 +1742,7 @@
     };
 
     const renderExecutionReport = (execution) => {
-      renderReportSection("executionContent", "ExecuÃ§Ã£o", execution, (value, container) => {
+      renderReportSection("executionContent", "Execução", execution, (value, container) => {
         const imageArtifacts = getImageArtifactPaths(
           value?.screenshots || [],
           value?.image_evidence || [],
@@ -1775,7 +1775,7 @@
         if (value.execution_log_lines?.length) {
           const logs = document.createElement("div");
           logs.className = "report-block";
-          logs.innerHTML = `<h4>Logs de execuÃ§Ã£o</h4><pre>${escapeHtml(value.execution_log_lines.join("\n"))}</pre>`;
+          logs.innerHTML = `<h4>Logs de execução</h4><pre>${escapeHtml(value.execution_log_lines.join("\n"))}</pre>`;
           container.appendChild(logs);
         }
 
@@ -1797,7 +1797,7 @@
         }
 
         if (value.evidence?.length) {
-          renderArtifacts(value.evidence, "executionArtifacts", "EvidÃªncias");
+          renderArtifacts(value.evidence, "executionArtifacts", "Evidências");
         } else if (!imageArtifacts.length) {
           renderArtifacts(value.screenshots || [], "executionArtifacts", "Screenshots");
         }
@@ -1805,7 +1805,7 @@
         if (value.test_results) {
           const summary = document.createElement("div");
           summary.className = "report-block";
-          summary.innerHTML = `<h4>Resumo tÃ©cnico</h4><pre>${escapeHtml(JSON.stringify(value.test_results, null, 2))}</pre>`;
+          summary.innerHTML = `<h4>Resumo técnico</h4><pre>${escapeHtml(JSON.stringify(value.test_results, null, 2))}</pre>`;
           container.appendChild(summary);
         }
       });
@@ -1815,10 +1815,10 @@
     const renderHomologationReport = (homologation) => {
       const banner = byId("homologationHeader");
       if (banner) {
-        banner.textContent = homologation?.homologation_status ? `Status: ${homologation.homologation_status}` : "HomologaÃ§Ã£o atualizada";
+        banner.textContent = homologation?.homologation_status ? `Status: ${homologation.homologation_status}` : "Homologação atualizada";
         banner.classList.remove("hidden");
       }
-      renderReportSection("homologationContent", "HomologaÃ§Ã£o", homologation, (value, container) => {
+      renderReportSection("homologationContent", "Homologação", homologation, (value, container) => {
         const imageArtifacts = getImageArtifactPaths(
           value?.execution_artifacts?.screenshots || [],
           value?.execution_artifacts?.image_evidence || [],
@@ -1832,8 +1832,8 @@
         const summaryFields = [
           ["Taxa de sucesso", value.success_rate],
           ["Falhas", value.failure_count || value.failures || value.error_count],
-          ["Causa provÃ¡vel", value.probable_cause],
-          ["Tempo de execuÃ§Ã£o", value.execution_time || value.runtime],
+          ["Causa provável", value.probable_cause],
+          ["Tempo de execução", value.execution_time || value.runtime],
         ].filter(([, fieldValue]) => fieldValue !== undefined && fieldValue !== null && fieldValue !== "");
 
         if (summaryFields.length) {
@@ -1854,7 +1854,7 @@
     };
 
     const renderFinalizationReport = (report) => {
-      renderReportSection("finalizationContent", "FinalizaÃ§Ã£o", report);
+      renderReportSection("finalizationContent", "Finalização", report);
       injectReportStatus("finalizationContent", "finalization", report);
       const exportables = report?.exportables || {};
       const container = byId("finalizationContent");
@@ -1880,7 +1880,7 @@
         const wrap = document.createElement("div");
         wrap.className = "report-block";
         wrap.innerHTML = `
-          <h4>ExportÃ¡veis</h4>
+          <h4>Exportáveis</h4>
           <div class="artifact-grid">
             ${exportables.json ? '<button type="button" class="artifact-chip" data-export="json">JSON</button>' : ""}
             ${exportables.html ? '<button type="button" class="artifact-chip" data-export="html">HTML</button>' : ""}
@@ -1892,7 +1892,7 @@
     };
 
     const renderRefactoringReport = (refactoring) => {
-      renderReportSection("refactoringContent", "RefatoraÃ§Ã£o", refactoring, (value, container) => {
+      renderReportSection("refactoringContent", "Refatoração", refactoring, (value, container) => {
         if (value.original_script || value.refactored_script) {
           const block = document.createElement("div");
           block.className = "report-block";
@@ -1940,7 +1940,7 @@
         ...(execution?.traces || []),
         ...(execution?.evidence || []),
       ];
-      renderArtifacts(artifacts, "executionArtifacts", artifacts.length ? "Artefatos de execuÃ§Ã£o" : "Artefatos");
+      renderArtifacts(artifacts, "executionArtifacts", artifacts.length ? "Artefatos de execução" : "Artefatos");
     };
 
     const buildTabContent = () =>
@@ -1975,25 +1975,25 @@
             <div id="tab-validation" class="result-tab">
               <div id="validationFeedback" class="status-banner hidden"></div>
               <div class="code-actions">
-                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-no-changes">Continuar sem alteraÃ§Ãµes</button>
-                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-pipeline">Aplicar alteraÃ§Ãµes e continuar</button>
+                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-no-changes">Continuar sem alterações</button>
+                <button type="button" class="btn-primary btn-primary-inline" data-action="continue-pipeline">Aplicar alterações e continuar</button>
               </div>
               <div id="validationSummary"></div>
               <div class="validation-section">
                 <div class="validation-section-header">
-                  <h4>VariÃ¡veis detectadas</h4>
+                  <h4>Variáveis detectadas</h4>
                 </div>
                 <div id="validationDetectedInputs" class="validation-card-grid-list"></div>
               </div>
               <div class="validation-section">
                 <div class="validation-section-header">
-                  <h4>Campos editÃ¡veis</h4>
+                  <h4>Campos editáveis</h4>
                 </div>
                 <div id="validationEditableFields" class="validation-card-grid-list"></div>
               </div>
               <div class="form-group">
-                <label for="validationUserResponse">Resposta do usuÃ¡rio</label>
-                <textarea id="validationUserResponse" rows="5" placeholder="Explique a validaÃ§Ã£o, ajuste os valores detectados ou descreva qualquer mudanÃ§a necessÃ¡ria."></textarea>
+                <label for="validationUserResponse">Resposta do usuário</label>
+                <textarea id="validationUserResponse" rows="5" placeholder="Explique a validação, ajuste os valores detectados ou descreva qualquer mudança necessária."></textarea>
               </div>
             </div>
           `;
@@ -2003,7 +2003,7 @@
           return `
             <div id="tab-confirmation" class="result-tab">
               <div class="report-block">
-                <h4>ConsolidaÃ§Ã£o da ConfirmaÃ§Ã£o</h4>
+                <h4>Consolidação da Confirmação</h4>
                 <div class="split-grid">
                   <div>
                     <div class="code-actions code-actions-inline">
@@ -2017,7 +2017,7 @@
                       <button type="button" class="btn-secondary btn-small" data-copy-target="confirmationContent">Copiar</button>
                       <button type="button" class="btn-secondary btn-small" data-action="download-script-target" data-script-target="confirmationContent" data-script-suffix="confirmed">Baixar</button>
                     </div>
-                    <strong>Script ajustado na validaÃ§Ã£o</strong><pre id="confirmationContent"><code></code></pre>
+                    <strong>Script ajustado na validação</strong><pre id="confirmationContent"><code></code></pre>
                   </div>
                 </div>
               </div>
@@ -2051,7 +2051,7 @@
               <div class="code-actions">
                 <button type="button" class="btn-secondary" data-action="rerun-from-zero">Executar do zero novamente</button>
                 <button type="button" class="btn-primary btn-primary-inline" data-action="apply-refactor-stage">Executar script refatorado a partir de Confirmation</button>
-                <button type="button" class="btn-secondary" data-action="finalize-execution">Finalizar execuÃ§Ã£o</button>
+                <button type="button" class="btn-secondary" data-action="finalize-execution">Finalizar execução</button>
               </div>
               <div class="form-group">
                 <label for="refactoringScriptEditor">Script refatorado</label>
@@ -2135,7 +2135,7 @@
 
       container.innerHTML = `
         <div class="results-tabs">
-          ${RESULT_TABS.map((tab, index) => `<button type="button" class="result-tab-btn${index === 0 ? " active" : ""}" id="result-tab-btn-${tab.key}" data-result-tab="${tab.key}"><span>${tab.title}</span><span class="result-tab-indicator" id="result-status-${tab.key}">â—‹</span></button>`).join("")}
+          ${RESULT_TABS.map((tab, index) => `<button type="button" class="result-tab-btn${index === 0 ? " active" : ""}" id="result-tab-btn-${tab.key}" data-result-tab="${tab.key}"><span>${tab.title}</span><span class="result-tab-indicator" id="result-status-${tab.key}">○</span></button>`).join("")}
         </div>
         <div class="result-content">${buildTabContent()}</div>
       `;
@@ -2218,23 +2218,23 @@
     const renderPhaseOneResults = (results) => {
       setStep(1, "ok");
       if (results.structured) {
-        renderGraphView("structuredTreeContent", results.structured, "EstruturaÃ§Ã£o");
+        renderGraphView("structuredTreeContent", results.structured, "Estruturação");
         updateCode("structuredJsonContent", JSON.stringify(results.structured, null, 2));
-        addLog("EstruturaÃ§Ã£o concluÃ­da", "success", "EstruturaÃ§Ã£o");
+        addLog("Estruturação concluída", "success", "Estruturação");
       }
 
       setStep(2, "ok");
       if (results.extracted) {
-        renderGraphView("extractedTreeContent", results.extracted, "ExtraÃ§Ã£o");
+        renderGraphView("extractedTreeContent", results.extracted, "Extração");
         updateCode("extractedJsonContent", JSON.stringify(results.extracted, null, 2));
-        addLog("ExtraÃ§Ã£o concluÃ­da", "success", "ExtraÃ§Ã£o");
+        addLog("Extração concluída", "success", "Extração");
       }
 
       setStep(3, "ok");
       if (results.refined) {
         renderGraphView("refinedTreeContent", results.refined, "Refinamento");
         updateCode("refinedJsonContent", JSON.stringify(results.refined, null, 2));
-        addLog("Refinamento concluÃ­do", "success", "Refinamento");
+        addLog("Refinamento concluído", "success", "Refinamento");
       }
 
       setStep(4, "ok");
@@ -2246,18 +2246,18 @@
         if (confirmationEditor && !confirmationEditor.value) {
           confirmationEditor.value = results.script;
         }
-        addLog("GeraÃ§Ã£o concluÃ­da", "success", "GeraÃ§Ã£o");
+        addLog("Geração concluída", "success", "Geração");
       }
 
       setStep(5, "ok");
       renderValidationCards(results.validation || results);
-      setValidationFeedback("A validaÃ§Ã£o estÃ¡ pronta. VocÃª pode continuar sem mudanÃ§as ou ajustar os campos detectados.", "info");
-      addLog("ValidaÃ§Ã£o concluÃ­da", "success", "ValidaÃ§Ã£o");
+      setValidationFeedback("A validação está pronta. Você pode continuar sem mudanças ou ajustar os campos detectados.", "info");
+      addLog("Validação concluída", "success", "Validação");
     };
 
     const renderPhaseTwoResults = (results) => {
       setStep(6, "ok");
-      addLog(results.confirmation_used_llm ? "ConfirmaÃ§Ã£o concluÃ­da com ajustes manuais" : "ConfirmaÃ§Ã£o concluÃ­da sem alteraÃ§Ãµes", "success", "ConfirmaÃ§Ã£o");
+      addLog(results.confirmation_used_llm ? "Confirmação concluída com ajustes manuais" : "Confirmação concluída sem alterações", "success", "Confirmação");
       if (results.confirmed_script) {
         updateCode("confirmationContent", results.confirmed_script);
       }
@@ -2265,17 +2265,17 @@
       setStep(7, "ok");
       if (results.execution || results.execution_result) {
         renderExecutionReport(results.execution || results.execution_result);
-        addLog("ExecuÃ§Ã£o concluÃ­da", "success", "ExecuÃ§Ã£o");
+        addLog("Execução concluída", "success", "Execução");
       }
 
       setStep(8, "ok");
       if (results.homologation) {
         renderHomologationReport(results.homologation);
-        addLog("HomologaÃ§Ã£o concluÃ­da", "success", "HomologaÃ§Ã£o");
+        addLog("Homologação concluída", "success", "Homologação");
       }
 
       setStep(9, "ok");
-      addLog("FinalizaÃ§Ã£o concluÃ­da", "success", "FinalizaÃ§Ã£o");
+      addLog("Finalização concluída", "success", "Finalização");
       if (results.finalReport || results.exportables?.json) {
         renderFinalizationReport(results.finalReport || results.exportables?.json);
       }
@@ -2283,7 +2283,7 @@
       setStep(10, "ok");
       if (results.refactoring || results.refactoredScript) {
         renderRefactoringReport(results.refactoring || { refactored_script: results.refactoredScript });
-        addLog("RefatoraÃ§Ã£o concluÃ­da", "success", "RefatoraÃ§Ã£o");
+        addLog("Refatoração concluída", "success", "Refatoração");
       }
     };
 
@@ -2295,7 +2295,7 @@
         const llmConfig = configs.find((config) => config.id === selectedId);
 
         if (!llmConfig) {
-          showToast("Selecione uma configuraÃ§Ã£o de LLM", "error");
+          showToast("Selecione uma configuração de LLM", "error");
           return;
         }
 
@@ -2346,7 +2346,7 @@
           backendInputMode = "test_case";
           urls = payload.modules.map((module) => module.url).filter(Boolean);
           if (!testDescription) {
-            showToast("Informe o tÃ­tulo estruturado", "error");
+            showToast("Informe o título estruturado", "error");
             return;
           }
         }
@@ -2412,13 +2412,13 @@
         }
 
         if (currentSession.awaitingUserResponse) {
-          addLog("Pipeline pausado na validaÃ§Ã£o. Aguardando resposta do usuÃ¡rio.", "info");
-          setValidationFeedback("Pipeline pausada para validaÃ§Ã£o humana. Revise os campos e confirme para continuar.", "warning");
+          addLog("Pipeline pausado na validação. Aguardando resposta do usuário.", "info");
+          setValidationFeedback("Pipeline pausada para validação humana. Revise os campos e confirme para continuar.", "warning");
         }
 
         renderPhaseOneResults(results);
         activateResultTab("validation");
-        showToast("ValidaÃ§Ã£o pronta. Revise os dados e continue quando estiver pronto.", "success");
+        showToast("Validação pronta. Revise os dados e continue quando estiver pronto.", "success");
       } catch (error) {
         console.error(error);
         setStep(1, "error");
@@ -2430,7 +2430,7 @@
 
     const continueGenerationPipeline = async (withManualChanges = true) => {
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline ID nÃ£o encontrado", "error");
+        showToast("Pipeline ID não encontrado", "error");
         return;
       }
 
@@ -2444,7 +2444,7 @@
         );
         currentSession.resumeFromStage = "confirmation";
         setValidationFeedback("A resposta foi enviada. O pipeline voltou a rodar.", "success");
-        addLog("Continuando pipeline apÃ³s validaÃ§Ã£o...", "info", "ValidaÃ§Ã£o");
+        addLog("Continuando pipeline após validação...", "info", "Validação");
         const manualChanges = collectValidationChanges(withManualChanges);
         setStep(6, "running");
         activateResultTab("logs");
@@ -2475,8 +2475,8 @@
           status: "success",
         });
 
-        addLog(`Pipeline completa finalizada em ${duration.toFixed(2)}s`, "success", "FinalizaÃ§Ã£o");
-        showToast("Pipeline concluÃ­da com sucesso", "success");
+        addLog(`Pipeline completa finalizada em ${duration.toFixed(2)}s`, "success", "Finalização");
+        showToast("Pipeline concluída com sucesso", "success");
         onGenerationComplete?.();
         currentSession.completed = true;
       } catch (error) {
@@ -2490,7 +2490,7 @@
 
     const relaunchPipelineFromStage = async () => {
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline nÃ£o encontrada", "error");
+        showToast("Pipeline não encontrada", "error");
         return;
       }
 
@@ -2511,7 +2511,7 @@
 
       try {
         setValidationFeedback(`Reexecutando a pipeline a partir de ${resumeStage}.`, "info");
-        addLog(`Reexecutando a pipeline a partir de ${resumeStage}...`, "info", "RefatoraÃ§Ã£o");
+        addLog(`Reexecutando a pipeline a partir de ${resumeStage}...`, "info", "Refatoração");
         currentSession.scriptOverride = scriptOverride;
         currentSession.resumeFromStage = resumeStage;
         currentSession.promptOverrides = pipelineOverrides.promptOverrides;
@@ -2526,7 +2526,7 @@
         };
         renderPhaseTwoResults(results);
         currentSession.completed = true;
-        showToast("Pipeline reiniciada a partir do estÃ¡gio selecionado", "success");
+        showToast("Pipeline reiniciada a partir do estágio selecionado", "success");
       } catch (error) {
         console.error(error);
         addLog(`Falha ao reexecutar: ${error.message}`, "error");
@@ -2543,7 +2543,7 @@
       }
 
       if (!currentSession?.pipelineId) {
-        showToast("Pipeline nÃ£o encontrada", "error");
+        showToast("Pipeline não encontrada", "error");
         return;
       }
 
@@ -2560,7 +2560,7 @@
         showToast("Script refatorado aplicado e pipeline reexecutada", "success");
       } catch (error) {
         console.error(error);
-        addLog(`Falha ao aplicar refatoraÃ§Ã£o: ${error.message}`, "error");
+        addLog(`Falha ao aplicar refatoração: ${error.message}`, "error");
         showToast(error.message, "error");
       }
     };
@@ -2593,8 +2593,8 @@
     };
 
     const finalizeExecution = () => {
-      addLog("ExecuÃ§Ã£o finalizada pelo usuÃ¡rio.", "success", "FinalizaÃ§Ã£o");
-      showToast("ExecuÃ§Ã£o finalizada", "success");
+      addLog("Execução finalizada pelo usuário.", "success", "Finalização");
+      showToast("Execução finalizada", "success");
       currentSession = null;
       clearCurrentSession();
       root.api?.geniaAPI?.closePipelineLogStream?.();
@@ -2656,4 +2656,3 @@
     setupTestGeneratorPage,
   };
 })();
-
