@@ -216,13 +216,93 @@ http://localhost:5500
 
 ## Basic Usage
 
-1. Register or log in through the frontend.
-2. Configure the LLM provider and model.
-3. Select the target framework and language.
-4. Provide either a test case or a user story, depending on the selected input mode.
-5. Run the generation pipeline.
-6. Review the validation output, apply any necessary manual changes, and continue the pipeline.
-7. Inspect the execution logs, generated artifacts, and final reports.
+The following walkthrough describes a realistic end-to-end scenario using the platform.
+
+### 1. Create an account
+
+Register a new user by providing a username and password.
+
+> Important: user data is stored only in memory during the current session. Once the browser session ends, no information is persisted.
+
+### 2. Configure the AI model
+
+Click on `Config. LLM` and fill in the form with:
+
+- Configuration name: `LLM for GenIA testing`
+- Provider: `OpenAI`
+- Model: `gpt-4o-mini`
+- Temperature: `0`
+- API Key: `[PASTE_YOUR_API_KEY]`
+
+Then click `Save`.
+
+### 3. Start the test generation process
+
+Click `Generate Test`.
+
+### 4. Provide the test case
+
+In the `INPUT TYPE` section, select:
+
+- `Free Input`
+- `Test Case`
+
+In the `Test Case` field, paste exactly the following content:
+
+```text
+urls: [https://demowebshop.tricentis.com, https://demowebshop.tricentis.com/login]
+
+Test Case 3: Login User with incorrect email and password
+
+1. Launch browser
+2. Navigate to url 'https://demowebshop.tricentis.com'
+3. Click on 'Log in' button
+4. Enter an invalid email address "invalid_email_genia@gmail.com" and an invalid password "invalid_password"
+5. Click 'Log in' button
+6. Verify errors 'Login was unsuccessful. Please correct the errors and try again.' and 'No customer account found' is visible
+```
+
+### 5. Configure the project
+
+In the `PROJECT` section, fill in:
+
+- New project: `Demowebshop`
+- Select project: `Demowebshop`
+- Test name: `Login User with incorrect email and password`
+
+### 6. Configure framework and language
+
+In the `FRAMEWORK/LANGUAGE` section, select:
+
+- Framework: `Robot Framework`
+- Language: `Python`
+
+### 7. Run the pipeline
+
+Click `Generate Test`.
+
+A bottom panel will appear showing the progress of the pipeline.
+
+Follow the execution until the `Validation` stage.
+
+### 8. Validation stage
+
+When the pipeline reaches the `Validation` stage, click it.
+
+Two buttons will be displayed.
+
+Select:
+
+- `Continue without changes`
+
+### 9. End of the pipeline
+
+After the `Validation` stage, the pipeline will continue automatically.
+
+When the execution ends at the `Refactoring` stage:
+
+- `Click Refactoring`
+- `Click Finish execution`
 
 ---
 
@@ -241,7 +321,7 @@ If you use **GenIA-E2ETest Platform** in your research or project, please cite:
 
 ```bibtex
 
-@inproceedings{junior2025genia,
+@inproceedings{junior2026genia,
   author       = {Elvis Junior and Pedro Amaro and Allber Ferreira and Vânia O. Neves},
   title        = {GenIA‑E2ETest: A Generative AI‑Based Platform for End‑to‑End Test Automation},
   booktitle    = {Anais do XL Simpósio Brasileiro de Engenharia de Software},
