@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Callable, Optional
 
 from backend.domain.models import ExecutionResult
-from backend.infrastructure.frameworks_languages import ExecutionStrategyRegistry, get_execution_strategy
+from backend.infrastructure.frameworks_languages import ExecutionStrategyRegistry
 
 
 class TestExecutor:
@@ -24,6 +24,3 @@ class TestExecutor:
     ) -> ExecutionResult:
         strategy = self.resolve_strategy(framework, language, script)
         return strategy.execute(framework, script, language=language, log_callback=log_callback)
-
-
-__all__ = ["TestExecutor", "get_execution_strategy"]

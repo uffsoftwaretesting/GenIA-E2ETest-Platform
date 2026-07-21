@@ -14,7 +14,6 @@ if str(PARENT_DIR) not in sys.path:
 
 from backend.http.app_factory import create_app
 
-# deixa o erro aparecer nos logs
 app, socketio, orchestrator = create_app()
 logging.getLogger("genia.api").info("GenIA backend entrypoint initialized")
 

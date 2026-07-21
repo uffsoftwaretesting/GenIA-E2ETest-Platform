@@ -5,7 +5,7 @@ from .cypress import CypressJavaScriptExecutionStrategy, CypressTypeScriptExecut
 from .junit import JUnitJavaExecutionStrategy
 from .playwright import PlaywrightJavaScriptExecutionStrategy, PlaywrightTypeScriptExecutionStrategy
 from .pytest import PytestPythonExecutionStrategy
-from .registry import ExecutionStrategyRegistry, get_execution_strategy
+from .registry import ExecutionStrategyRegistry
 from .robotframework import RobotFrameworkPythonExecutionStrategy
 from .selenium import (
     SeleniumJavaExecutionStrategy,
@@ -18,7 +18,6 @@ __all__ = [
     "BaseExecutionStrategy",
     "GenericPythonExecutionStrategy",
     "ExecutionStrategyRegistry",
-    "get_execution_strategy",
     "RobotFrameworkPythonExecutionStrategy",
     "PlaywrightJavaScriptExecutionStrategy",
     "PlaywrightTypeScriptExecutionStrategy",

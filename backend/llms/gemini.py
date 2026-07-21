@@ -41,7 +41,6 @@ class GeminiProvider:
             temperature=temperature
         )
 
-        # Remove markdown
         text = text.replace(
             "```json",
             ""
@@ -50,7 +49,6 @@ class GeminiProvider:
             ""
         ).strip()
 
-        # Extrai JSON válido
         match = re.search(
             r'(\{.*\}|\[.*\])',
             text,

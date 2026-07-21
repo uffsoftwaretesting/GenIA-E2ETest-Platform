@@ -189,7 +189,6 @@ def create_app() -> tuple[Flask, SocketIO, GenIAOrchestrator]:
         request.request_id = str(uuid.uuid4())[:8]
         trace(f"[{request.request_id}] --> {request.method} {request.path} from {request.remote_addr}")
 
-    # ✅ CORREÇÃO 3: Simplificar apply_headers - deixar CORS para flask-cors
     @app.after_request
     def apply_headers(response):
         response.headers["X-Content-Type-Options"] = "nosniff"

@@ -142,9 +142,6 @@
   root.auth = {
     AuthService,
     authService: new AuthService(),
-    authManager: null,
   };
-
-  root.auth.authManager = root.auth.authService;
 })();
 

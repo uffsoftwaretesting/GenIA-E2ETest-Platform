@@ -1379,31 +1379,8 @@
 
       simulation.velocityDecay(0.54);
 
-      // const link = g.selectAll("line")
-      //   .data(links)
-      //   .enter()
-      //   .append("line")
-      //   .attr("class", (d) => {
-      //     if (!d.isChild) return "flow-link";
-      //     return d.linkType === "property" ? "child-link property-link" : "child-link detail-link";
-      //   })
-      //   .attr("marker-end", "url(#arrowhead)")
-
-      // svg.append("defs").append("marker")
-      //   .attr("id", "arrowhead")
-      //   .attr("markerWidth", 10)
-      //   .attr("markerHeight", 10)
-      //   .attr("refX", 12)
-      //   .attr("refY", 5)
-      //   .attr("orient", "auto")
-      //   .append("polygon")
-      //   .attr("points", "0 0, 10 5, 0 10")
-      //   .attr("fill", "#2563eb");
-
-      // cria id Ãºnico para cada grÃ¡fico
       const markerId = `arrowhead-${containerId}`;
 
-      // criar marker PRIMEIRO
       const defs = svg.append("defs");
 
       defs.append("marker")
@@ -1418,7 +1395,6 @@
         .attr("points", "0 0, 36 18, 0 36")
         .attr("fill", "#2563eb");
 
-      // criar links DEPOIS
       const link = g.selectAll("line")
         .data(links)
         .enter()
@@ -1469,7 +1445,6 @@
               ? 13
               : 14;
 
-        // centraliza verticalmente o bloco inteiro de linhas
         const startY =
           -((lines.length - 1) * lineHeight) / 2 + lineHeight / 2;
 
@@ -1976,11 +1951,6 @@
             extraction: "extractedTreeContent",
             refinement: "refinedTreeContent",
           };
-          // <div class="report-shell">
-          //   <div class="report-card">
-          //     <div id="${treeId}" class="graph-host"></div>
-          //   </div>
-          // </div>
           const treeId = treeIdMap[tab.key] || `${tab.key}TreeContent`;
           return `
             <div id="tab-${tab.key}" class="result-tab">
@@ -2686,3 +2656,4 @@
     setupTestGeneratorPage,
   };
 })();
+

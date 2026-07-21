@@ -89,7 +89,3 @@ class ExecutionStrategyRegistry:
             return GenericPythonExecutionStrategy()
 
         return GenericPythonExecutionStrategy()
-
-
-def get_execution_strategy(framework: str, language: str | None = None, script: str | None = None) -> BaseExecutionStrategy:
-    return ExecutionStrategyRegistry().resolve(framework, language, script)
